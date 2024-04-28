@@ -1,5 +1,5 @@
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
-import { Colors, Spacings, Sizes } from '../Values';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Colors, Spacings, Sizes } from '@values';
 import { AntDesign } from '@expo/vector-icons';
 
 interface CredentialInputProps {
@@ -57,9 +57,9 @@ export default function CredentialInput({
           secureTextEntry={password}
         />
         {inputProps.inputText ? (
-          <Pressable onPress={() => inputProps.setInputText('')}>
+          <TouchableOpacity onPress={() => inputProps.setInputText('')}>
             <AntDesign name='closecircle' size={Sizes.h2} color={Colors.onBackground} style={{ opacity: 0.5 }} />
-          </Pressable>
+          </TouchableOpacity>
         ) : null}
       </View>
     </>
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     color: Colors.error,
   },
   inputContainer: {
-    width: 358,
     height: 42,
     flexDirection: 'row',
     backgroundColor: '#E4E4E4',
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     width: '90%',
-    height: 42,
+    height: '100%',
     color: Colors.text,
   },
 });

@@ -1,8 +1,8 @@
-import { SafeAreaView, Text, StyleSheet, Pressable } from "react-native";
+import { SafeAreaView, Text, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Colors, Sizes, Spacings } from "./Values";
+import { CredentialInput, Button } from '@components';
+import { Colors, Sizes, Spacings } from "@values";
 import React, { useState } from 'react';
-import CredentialInput from "./components/CredentialInput";
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -18,9 +18,11 @@ export default function RegisterPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Pressable>
-        <Text style={styles.cancelButton}>Cancel</Text>
-      </Pressable>
+      <Button
+        title='Cancel'
+        style={styles.cancelButton}
+        onPress={() => {}}
+        disabled={false} />
       <Text style={styles.title}>Create an Account</Text>
       <CredentialInput
         title='Name'
@@ -38,12 +40,12 @@ export default function RegisterPage() {
         inputProps={{ inputText: password, setInputText: setPassword }} 
         style={{ marginBottom: Spacings.xl }}
         password={true} />
-      <Pressable 
-        style={[styles.createAccountButton, { opacity: isButtonDisabled ? 0.5 : 1 }]} 
-        onPress={() => console.log('Create Account Pressed')}
-        disabled={isButtonDisabled} >
-        <Text style={styles.createAccountButtonText}>Create Account</Text>
-      </Pressable>
+      <Button
+        title='Create Account'
+        style={styles.createAccountButton}
+        textStyle={styles.createAccountButtonText}
+        onPress={() => {console.log('Create Account')}}
+        disabled={isButtonDisabled} />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -52,6 +54,7 @@ export default function RegisterPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: Spacings.m,
   },
   title: {
     fontSize: Sizes.h1,
@@ -59,10 +62,10 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     fontSize: Sizes.h3,
+    alignSelf: 'flex-start',
     marginBottom: Spacings.m
   },
   createAccountButton: {
-    width: 213,
     height: 42,
     backgroundColor: Colors.primary,
     opacity: 0.5,
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: Spacings.m,
+    paddingHorizontal: Spacings.xxl,
   },
   createAccountButtonText: {
     fontSize: Sizes.h3,
