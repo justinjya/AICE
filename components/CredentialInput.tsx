@@ -27,16 +27,7 @@ export default function CredentialInput({
   return (
     <>
       <View style={styles.titleContainer}>
-        <Text
-          style={[
-            styles.title, { 
-              color: isError ? Colors.error : Colors.text,
-              marginRight: Spacings.s
-            }
-          ]
-        } >
-          {title}
-        </Text>
+        <Text style={[styles.title, { color: isError ? Colors.error : Colors.text, marginRight: Spacings.s }]}>{title}</Text>
         { isError ? (
           <>
             <AntDesign

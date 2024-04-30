@@ -5,7 +5,7 @@ interface ButtonProps {
   title: string;
   style?: object;
   textStyle?: object;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
