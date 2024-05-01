@@ -42,7 +42,7 @@ export default function RegisterPage() {
         password={true} />
       <Button
         title='Create Account'
-        style={styles.createAccountButton}
+        style={[styles.createAccountButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
         textStyle={styles.createAccountButtonText}
         onPress={() => {console.log('Create Account')}}
         disabled={isButtonDisabled} />
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
   createAccountButton: {
     height: 42,
     backgroundColor: Colors.primary,
-    opacity: 0.5,
     borderRadius: 10,
     borderColor: Colors.orange_600,
     borderWidth: 1,

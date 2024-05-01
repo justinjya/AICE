@@ -22,7 +22,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <TouchableOpacity
-      style={[style, { opacity: disabled ? 0.5 : 1 }]}
+      style={style}
       onPress={onPress}
       disabled={disabled} >
       <View style={styles.content}>

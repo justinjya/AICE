@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 
 export default function AccountDetailsPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const isEmailValid = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -23,6 +24,7 @@ export default function AccountDetailsPage() {
 
   const isEditingAnyField = isEditingName || isEditingEmail || isEditingPassword;
 
+  if (isLoggedIn) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Account Details</Text>
@@ -39,7 +41,7 @@ export default function AccountDetailsPage() {
             <View style={styles.detailRow}>
               <Text style={styles.detail}>{name}</Text>
               <Pressable onPress={() => setIsEditingName(true)}>
-                <Feather name="edit" size={24} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
+                <Feather name="edit" size={20} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
               </Pressable>
             </View>
           </>
@@ -58,7 +60,7 @@ export default function AccountDetailsPage() {
             <View style={styles.detailRow}>
               <Text style={styles.detail}>{email}</Text>
               <Pressable onPress={() => setIsEditingEmail(true)}>
-                <Feather name="edit" size={24} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
+                <Feather name="edit" size={20} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
               </Pressable>
             </View>
           </>
@@ -77,18 +79,18 @@ export default function AccountDetailsPage() {
               <View style={styles.detailRow}>
                 <Text style={styles.detail}>{'•'.repeat(password.length)}</Text>
                 <Pressable onPress={() => setIsEditingPassword(true)}>
-                  <Feather name="edit" size={24} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
+                  <Feather name="edit" size={20} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
                 </Pressable>
               </View>
             </>
           )}
       </View>
       {isEditingAnyField ? (
-      <View style={styles.ButtonContainer}>
+      <View style={styles.buttonContainer}>
         <Button
           title='Cancel'
-          style={styles.CancelButton}
-          textStyle={styles.SaveButtonText}
+          style={[styles.button, { opacity: 0.5, marginRight: Spacings.s }]}
+          textStyle={styles.buttonText}
           onPress={() => {
             setIsEditingName(false);
             setIsEditingEmail(false);
@@ -97,8 +99,8 @@ export default function AccountDetailsPage() {
         />
         <Button
           title='Save'
-          style={styles.SaveButton}
-          textStyle={styles.SaveButtonText}
+          style={styles.button}
+          textStyle={styles.buttonText}
           onPress={() => {
             setIsEditingName(false);
             setIsEditingEmail(false);
@@ -109,14 +111,31 @@ export default function AccountDetailsPage() {
     ) : (
       <Button
         title='Logout'
-        style={styles.LogoutButton}
-        textStyle={styles.LogoutButtonText}
+        style={styles.logoutButton}
+        textStyle={styles.logoutButtonText}
       />
     )}
       <StatusBar style="auto" />
     </SafeAreaView>
+  );}
+  else {
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Account Details</Text>
+      <Text style={{ width: '80%', fontSize: Sizes.h3 , marginBottom: Spacings.l}}>You are currently not signed into any account.</Text>
+      <Button
+        title='Create an account'
+        style={{ alignSelf: 'flex-start', marginBottom: Spacings.s }}
+        textStyle={{ fontSize: Sizes.l, textDecorationLine: 'underline' }}
+      />
+      <Button
+        title='Login to an existing account'
+        style={{ alignSelf: 'flex-start', marginBottom: Spacings.s }}
+        textStyle={{ fontSize: Sizes.l, textDecorationLine: 'underline' }}
+      />
+    </SafeAreaView>
   );
-}
+}}
 
 const styles = StyleSheet.create({
   container: {
@@ -145,10 +164,9 @@ const styles = StyleSheet.create({
     marginRight: Spacings.s,
     fontSize: Sizes.h2,
   },
-  LogoutButton: {
+  logoutButton: {
     height: 42,
     backgroundColor: Colors.primary,
-    opacity: 0.5,
     borderRadius: 10,
     borderColor: Colors.orange_600,
     borderWidth: 1,
@@ -157,19 +175,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: Spacings.xxl,
   },
-  LogoutButtonText: {
+  logoutButtonText: {
     fontSize: Sizes.h3,
     color: Colors.onPrimary
   },
-  ButtonContainer: {
+  buttonContainer: {
     flexDirection: 'row',
-    marginBottom: Spacings.m,
     justifyContent: 'flex-end'
   },
-  SaveButton: {
+  button: {
     height: 42,
     backgroundColor: Colors.primary,
-    opacity: 0.5,
     borderRadius: 10,
     borderColor: Colors.orange_600,
     borderWidth: 1,
@@ -178,21 +194,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: Spacings.xxl,
   },
-  SaveButtonText: {
+  buttonText: {
     fontSize: Sizes.h3,
     color: Colors.onPrimary
-  },
-  CancelButton: {
-    height: 42,
-    backgroundColor: Colors.primary,
-    opacity: 0.5,
-    borderRadius: 10,
-    borderColor: Colors.orange_600,
-    borderWidth: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacings.xxl,
-    marginRight: Spacings.s
   },
 });
