@@ -1,8 +1,8 @@
 import { SafeAreaView, Text, StyleSheet, Platform, StatusBar as StatusBarAPI } from "react-native";
+import { useState } from 'react';
 import { StatusBar } from "expo-status-bar";
 import { CredentialInput, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
-import React, { useState } from 'react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,11 +14,9 @@ export default function LoginPage() {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   };
-
-
+  
   const isButtonDisabled = !email || !isEmailValid(email) || password.length < 5;
   
-
   const handleLogin = () => {
     if (email !== 'anjaniibrahimm@gmail.com') {
       setIsEmailFalse(true);
@@ -39,8 +37,7 @@ export default function LoginPage() {
       <Button
         title='Cancel'
         style={styles.cancelButton}
-        onPress={() => {}}
-        disabled={false} />
+        onPress={() => {}} />
       <Text style={styles.title}>Login</Text>
       <CredentialInput
         title='Email'
@@ -59,11 +56,11 @@ export default function LoginPage() {
         password={true} />
       <Button
         title='Login'
-        style={styles.createAccountButton}
-        textStyle={styles.createAccountButtonText}
+        style={styles.loginButton}
+        textStyle={styles.loginText}
         onPress={handleLogin}
         disabled={isButtonDisabled} />
-      
+      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
@@ -82,10 +79,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginBottom: Spacings.m
   },
-  createAccountButton: {
+  loginButton: {
     height: 42,
     backgroundColor: Colors.primary,
-    opacity: 0.5,
     borderRadius: 10,
     borderColor: Colors.orange_600,
     borderWidth: 1,
@@ -94,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: Spacings.xxl,
   },
-  createAccountButtonText: {
+  loginText: {
     fontSize: Sizes.h3,
     color: Colors.onPrimary
   }
