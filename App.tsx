@@ -2,11 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { Colors } from '@values';
 import RegisterPage from './RegisterPage';
+import HomeScreen from 'HomeScreen';
 
 export default function App() {
-  return (
+  return ( 
     <SafeAreaView style={styles.container}>
-      <RegisterPage />
+      {/* <RegisterPage /> */}
+      <HomeScreen />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
