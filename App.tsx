@@ -7,8 +7,8 @@ import AccountDetailsPage from './AccountDetailsPage';
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <RegisterPage />
-      {/* <AccountDetailsPage /> */}
+      {/* <RegisterPage /> */}
+      <AccountDetailsPage />
       <StatusBar style="auto" />
     </SafeAreaView>
   );

@@ -1,12 +1,13 @@
-import { SafeAreaView, Text, StyleSheet, View, TextInput, Pressable } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View } from "react-native";
+import { useState } from 'react';
 import { StatusBar } from "expo-status-bar";
-import { CredentialInput, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
-import React, { useState } from 'react';
-import { Feather } from '@expo/vector-icons';
+import { Button, EditableField } from '@components';
+
+const offSpacing = 14;
 
 export default function AccountDetailsPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isEmailValid = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -14,128 +15,107 @@ export default function AccountDetailsPage() {
   };
 
   const [name, setName] = useState('John Doe');
+  const [tempName, setTempName] = useState(name);
   const [isEditingName, setIsEditingName] = useState(false);
 
   const [email, setEmail] = useState('john.doe@example.com');
+  const [tempEmail, setTempEmail] = useState(email);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
 
   const [password, setPassword] = useState('password');
+  const [tempPassword, setTempPassword] = useState(password);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
 
   const isEditingAnyField = isEditingName || isEditingEmail || isEditingPassword;
 
   if (isLoggedIn) {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Account Details</Text>
-      <View style={styles.detailContainer}>
-        {isEditingName ? (
-          <CredentialInput
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Account Details</Text>
+        <View style={styles.detailsContainer}>
+          <EditableField
             title="Name"
-            placeholder='Name' 
-            inputProps={{ inputText: name, setInputText: setName }} 
-            style={{ marginBottom: Spacings.s }} />
-        ) : (
-          <>
-            <Text style={styles.detailTitle}>Name</Text>
-            <View style={styles.detailRow}>
-              <Text style={styles.detail}>{name}</Text>
-              <Pressable onPress={() => setIsEditingName(true)}>
-                <Feather name="edit" size={20} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
-              </Pressable>
-            </View>
-          </>
-        )}
-      </View>
-      <View style={styles.detailContainer}>
-      {isEditingEmail ? (
-          <CredentialInput
+            attribute={name}
+            isEditingProps={{ isEditing: isEditingName, setIsEditing: setIsEditingName }}
+            tempValueProps={{ tempValue: tempName, setTempValue: setTempName }}
+            style={{ marginBottom: Spacings.l }}
+            inputFieldStyle={{ marginBottom: offSpacing }}
+          />
+          <EditableField
             title="Email"
-            placeholder='Email' 
-            inputProps={{ inputText: email, setInputText: setEmail }} 
-            style={{ marginBottom: Spacings.s }} />
+            attribute={email}
+            isEditingProps={{ isEditing: isEditingEmail, setIsEditing: setIsEditingEmail }}
+            tempValueProps={{ tempValue: tempEmail, setTempValue: setTempEmail }}
+            style={{ marginBottom: Spacings.l }}
+            inputFieldStyle={{ marginBottom: offSpacing }}
+          />
+          <EditableField
+            title="Password"
+            attribute={password}
+            password={true}
+            isEditingProps={{ isEditing: isEditingPassword, setIsEditing: setIsEditingPassword }}
+            tempValueProps={{ tempValue: tempPassword, setTempValue: setTempPassword }}
+            style={{ marginBottom: Spacings.l }}
+            inputFieldStyle={{ marginBottom: offSpacing }}
+          />
+        </View>
+        {isEditingAnyField ? (
+          <View style={styles.buttonContainer}>
+            <Button
+              title='Cancel'
+              style={[styles.button, { opacity: 0.5, marginRight: Spacings.s }]}
+              textStyle={styles.buttonText}
+              onPress={() => {
+                setTempName(name);
+                setTempEmail(email);
+                setTempPassword(password);
+                setIsEditingName(false);
+                setIsEditingEmail(false);
+                setIsEditingPassword(false);
+              }}
+            />
+            <Button
+              title='Save'
+              style={styles.button}
+              textStyle={styles.buttonText}
+              onPress={() => {
+                setName(tempName);
+                setEmail(tempEmail);
+                setPassword(tempPassword);
+                setIsEditingName(false);
+                setIsEditingEmail(false);
+                setIsEditingPassword(false);
+              }}
+            />
+          </View>
         ) : (
-          <>
-            <Text style={styles.detailTitle}>Email</Text>
-            <View style={styles.detailRow}>
-              <Text style={styles.detail}>{email}</Text>
-              <Pressable onPress={() => setIsEditingEmail(true)}>
-                <Feather name="edit" size={20} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
-              </Pressable>
-            </View>
-          </>
+          <Button
+            title='Logout'
+            style={styles.button}
+            textStyle={styles.buttonText}
+          />
         )}
-      </View>
-      <View style={styles.detailContainer}>
-        {isEditingPassword ? (
-            <CredentialInput password={true}
-              title="Password"
-              placeholder='Password' 
-              inputProps={{ inputText: password, setInputText: setPassword }} 
-              style={{ marginBottom: Spacings.s }} />
-          ) : (
-            <>
-              <Text style={styles.detailTitle}>Password</Text>
-              <View style={styles.detailRow}>
-                <Text style={styles.detail}>{'•'.repeat(password.length)}</Text>
-                <Pressable onPress={() => setIsEditingPassword(true)}>
-                  <Feather name="edit" size={20} color={Colors.secondary} style={{ marginRight: Spacings.l }} />
-                </Pressable>
-              </View>
-            </>
-          )}
-      </View>
-      {isEditingAnyField ? (
-      <View style={styles.buttonContainer}>
+        <StatusBar style="auto" />
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView style={[styles.container, { alignItems: 'flex-start' }]}>
+        <Text style={styles.title}>Account Details</Text>
+        <Text style={[styles.text, { width: '80%', marginBottom: Spacings.m }]}>You are currently not signed into any account.</Text>
         <Button
-          title='Cancel'
-          style={[styles.button, { opacity: 0.5, marginRight: Spacings.s }]}
-          textStyle={styles.buttonText}
-          onPress={() => {
-            setIsEditingName(false);
-            setIsEditingEmail(false);
-            setIsEditingPassword(false);
-          }}
+          title='Create an account'
+          style={{ marginBottom: Spacings.xs }}
+          textStyle={[styles.text, { textDecorationLine: 'underline' }]}
         />
         <Button
-          title='Save'
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => {
-            setIsEditingName(false);
-            setIsEditingEmail(false);
-            setIsEditingPassword(false);
-          }}
+          title='Login to an existing account'
+          textStyle={[styles.text, { textDecorationLine: 'underline' }]}
         />
-      </View>
-    ) : (
-      <Button
-        title='Logout'
-        style={styles.logoutButton}
-        textStyle={styles.logoutButtonText}
-      />
-    )}
-      <StatusBar style="auto" />
-    </SafeAreaView>
-  );}
-  else {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Account Details</Text>
-      <Text style={{ width: '80%', fontSize: Sizes.h3 , marginBottom: Spacings.l}}>You are currently not signed into any account.</Text>
-      <Button
-        title='Create an account'
-        style={{ alignSelf: 'flex-start', marginBottom: Spacings.s }}
-        textStyle={{ fontSize: Sizes.l, textDecorationLine: 'underline' }}
-      />
-      <Button
-        title='Login to an existing account'
-        style={{ alignSelf: 'flex-start', marginBottom: Spacings.s }}
-        textStyle={{ fontSize: Sizes.l, textDecorationLine: 'underline' }}
-      />
-    </SafeAreaView>
-  );
-}}
+      </SafeAreaView>
+    );
+  };
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -146,38 +126,9 @@ const styles = StyleSheet.create({
     fontSize: Sizes.h1,
     marginBottom: Spacings.xxl,
   },
-  detailContainer: {
+  detailsContainer: {
     flexDirection: 'column',
     marginBottom: Spacings.m,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    marginBottom: Spacings.m,
-    justifyContent: 'space-between',
-  },
-  detailTitle: {
-    marginRight: Spacings.s,
-    marginBottom: Spacings.m,
-    fontSize: Sizes.h3,
-  },
-  detail: {
-    marginRight: Spacings.s,
-    fontSize: Sizes.h2,
-  },
-  logoutButton: {
-    height: 42,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    borderColor: Colors.orange_600,
-    borderWidth: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacings.xxl,
-  },
-  logoutButtonText: {
-    fontSize: Sizes.h3,
-    color: Colors.onPrimary
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -198,4 +149,7 @@ const styles = StyleSheet.create({
     fontSize: Sizes.h3,
     color: Colors.onPrimary
   },
+  text: {
+    fontSize: Sizes.h3,
+  }
 });

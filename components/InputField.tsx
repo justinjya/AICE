@@ -2,9 +2,9 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Colors, Spacings, Sizes } from '@values';
 import { AntDesign } from '@expo/vector-icons';
 
-interface CredentialInputProps {
-  title: string;
-  placeholder: string;
+interface InputFieldProps {
+  title?: string;
+  placeholder?: string;
   inputProps: {
     inputText: string;
     setInputText: React.Dispatch<React.SetStateAction<string>>;
@@ -15,7 +15,7 @@ interface CredentialInputProps {
   errorMessage?: string;
 }
 
-export default function CredentialInput({
+export default function InputField({
   title,
   placeholder,
   inputProps,
@@ -23,22 +23,24 @@ export default function CredentialInput({
   style,
   isError,
   errorMessage
-}: CredentialInputProps) {
+}: InputFieldProps) {
   return (
     <>
-      <View style={styles.titleContainer}>
-        <Text style={[styles.title, { color: isError ? Colors.error : Colors.text, marginRight: Spacings.s }]}>{title}</Text>
-        { isError ? (
-          <>
-            <AntDesign
-              name='exclamationcircle'
-              size={Sizes.h3}
-              color={Colors.error}
-              style={{ marginRight: Spacings.s }} />
-            <Text style={styles.errorMessage}>{errorMessage}</Text>
-          </>
-        ) : null }
-      </View>
+      {title ? (
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, { color: isError ? Colors.error : Colors.text, marginRight: Spacings.s }]}>{title}</Text>
+          {isError ? (
+            <>
+              <AntDesign
+                name='exclamationcircle'
+                size={Sizes.h3}
+                color={Colors.error}
+                style={{ marginRight: Spacings.s }} />
+              <Text style={styles.errorMessage}>{errorMessage}</Text>
+            </>
+          ) : null }
+        </View>
+      ) : null}
       <View style={[styles.inputContainer, { borderColor: isError ? Colors.error : Colors.gray_200 } , style]}>
         <TextInput
           style={[styles.inputText, { color: isError ? Colors.error : Colors.onBackground}]}

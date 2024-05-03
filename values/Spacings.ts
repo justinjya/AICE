@@ -1,5 +1,6 @@
 export default {
-    xs: 4,
+    xxs: 4,
+    xs: 6,
     s: 8,
     m: 16,
     l: 24,

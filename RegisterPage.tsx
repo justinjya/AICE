@@ -1,6 +1,6 @@
 import { SafeAreaView, Text, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { CredentialInput, Button } from '@components';
+import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
 import React, { useState } from 'react';
 
@@ -24,17 +24,17 @@ export default function RegisterPage() {
         onPress={() => {}}
         disabled={false} />
       <Text style={styles.title}>Create an Account</Text>
-      <CredentialInput
+      <InputField
         title='Name'
         placeholder='Name' 
         inputProps={{ inputText: name, setInputText: setName }} 
         style={{ marginBottom: Spacings.m }} />
-      <CredentialInput
+      <InputField
         title='Email'
         placeholder='Email' 
         inputProps={{ inputText: email, setInputText: setEmail }} 
         style={{ marginBottom: Spacings.m }} />
-      <CredentialInput
+      <InputField
         title='Password'
         placeholder='Password' 
         inputProps={{ inputText: password, setInputText: setPassword }} 
