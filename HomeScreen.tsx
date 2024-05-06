@@ -6,7 +6,7 @@ import {
 import { useState, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
-import { Card, IconButton, Pagination } from '@components';
+import { RecipeCard, IconButton, Pagination } from '@components';
 
 const todaysPicksImages = [
   'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
@@ -77,7 +77,7 @@ export default function HomeScreen() {
               contentContainerStyle={{ marginBottom: Spacings.s }}
               renderItem={({ item }: any) => (
                 <Pressable>
-                  <Card
+                  <RecipeCard
                     recipe={item}
                     style={{ width: screenWidth, height: 274 }}
                     detailsIconSize={Sizes.l}
@@ -99,12 +99,12 @@ export default function HomeScreen() {
                   icon={isFilterActive ? (
                     <FontAwesome5
                       name='sliders-h'
-                      size={18}
+                      size={15}
                       color={Colors.onSecondary} />
                   ) : (
                     <FontAwesome5
                       name='sliders-h'
-                      size={18}
+                      size={15}
                       color={Colors.secondary} />
                   )}
                   style={[styles.filterIcon, { backgroundColor: isFilterActive ? Colors.secondary : Colors.onSecondary }]}
@@ -119,7 +119,7 @@ export default function HomeScreen() {
         keyExtractor={item => item.id.toString()}
         columnWrapperStyle={styles.cardsContainer}
         renderItem={({ item }) =>
-          <Card
+          <RecipeCard
             recipe={item}
             style={{ width: 171, height: 188 }}
             backgroundStyle={{ borderRadius: 10 }}

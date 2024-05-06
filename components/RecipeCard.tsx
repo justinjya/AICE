@@ -20,7 +20,7 @@ interface CardProps {
   titleTextStyle?: object;
 }
 
-export default function Card({ 
+export default function RecipeCard({ 
   recipe,
   style, 
   backgroundStyle,
