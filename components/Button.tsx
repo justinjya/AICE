@@ -2,10 +2,10 @@ import { TouchableOpacity, Text, View, StyleSheet} from "react-native";
 import { ReactNode } from "react";
 
 interface ButtonProps {
-  title: string;
+  title?: string;
   style?: object;
   textStyle?: object;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
