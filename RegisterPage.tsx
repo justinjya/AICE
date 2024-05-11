@@ -1,4 +1,5 @@
-import { SafeAreaView, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { CredentialInput, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";

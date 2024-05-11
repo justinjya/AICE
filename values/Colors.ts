@@ -8,6 +8,7 @@ export default {
     onTertiary: '#F1F1F1',
     error: '#F42F2F',
     text: '#2B2B2B',
+    white: '#F1F1F1',
     gray_100: '#E4E4E4',
     gray_200: '#CACACA',
     orange_600: '#D35C25'

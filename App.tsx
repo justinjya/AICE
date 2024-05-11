@@ -1,16 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
-import { Colors } from '@values';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Colors, Spacings } from '@values';
 import RegisterPage from './RegisterPage';
 import RecipeDetailsScreen from './RecipeDetailsScreen';
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
       {/* <RegisterPage /> */}
       <RecipeDetailsScreen />
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
