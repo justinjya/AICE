@@ -1,4 +1,5 @@
 export default {
+    xxxs: 2,
     xxs: 4,
     xs: 6,
     s: 8,
