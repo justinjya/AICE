@@ -1,8 +1,7 @@
-import { StyleSheet, View, Text, Image, SectionList } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 import { Spacings, Sizes, Colors } from "@values";
 import { Button } from "@components";
 
@@ -106,89 +105,54 @@ const recipe = {
   imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
 }
 
-interface Section {
-  title: string;
-  data: Array<any>;
-}
-
-const sections: Section[] = [
-  {title: 'Ingredients', data: recipe.ingredients},
-  {title: 'Instructions', data: recipe.instructions},
-];
-
 export default function RecipeDetailsScreen(){
-  return(
-    <SafeAreaView edges={['left', 'right']}>
-      <SectionList
-        ListHeaderComponent={
-          <HeaderComponent />
-        }
-        sections={sections}
-        stickySectionHeadersEnabled={false}
-        keyExtractor={item => item.id.toString()}
-        renderSectionHeader={({ section: { title } }) =>
-          <View style={styles.sectionTitleContainer}>
-            <Text style={{ fontSize: Sizes.h3 }}>{title}</Text>
-          </View>
-        }
-        renderItem={({ item, section }) => 
-          <RenderItem item={item} section={section} />
-        }
-        renderSectionFooter={() => 
-          <View style={styles.footer} />
-        }
-      />
-      <StatusBar style='auto' translucent />
-    </SafeAreaView>
-  );
-}
-
-function HeaderComponent() {
   const insets = useSafeAreaInsets();
 
-  return (
-    <>
-      <Image source={{ uri: recipe.imageUrl }} style={{ height: 360 }} />
-      <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
-      <Ionicons name="chevron-back" size={24} style={{ position: 'absolute', top: insets.top, left: 10, color: Colors.onPrimary }} />
-      <View style={styles.container}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.title}>Classic Lasagne</Text>
-          <Entypo name="dots-three-horizontal" size={20} style={{ marginTop: Spacings.m, color: Colors.text}} />
+  return(
+    <SafeAreaView edges={['left', 'right']}>
+      <ScrollView>
+        <Image source={{ uri: recipe.imageUrl }} style={{ height: 360 }} />
+        <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
+        <Ionicons name="chevron-back" size={24} style={{ position: 'absolute', top: insets.top, left: 10, color: Colors.onPrimary }} />
+        <View style={styles.container}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.title}>Classic Lasagne</Text>
+            <Entypo name="dots-three-horizontal" size={20} style={{ marginTop: Spacings.m, color: Colors.text}} />
+          </View>
+          <View style={styles.recipeNutritionContainer}>
+            <SimpleLineIcons name="fire" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
+            <Text style={[styles.recipeNutritionText, { marginRight: Spacings.m }]}>500 kcal</Text>
+            <SimpleLineIcons name="clock" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
+            <Text style={styles.recipeNutritionText}>1 hr and 40 mins</Text>
+          </View>
+          <Button
+            title='Make it vegan!'
+            style={[styles.veganButton, { marginBottom: Spacings.m }]}
+            textStyle={styles.veganButtonText}
+            rightIcon={<Entypo name="leaf" size={20} color={Colors.onPrimary} />}
+            onPress={() => {}} />
         </View>
-        <View style={styles.recipeNutritionContainer}>
-          <SimpleLineIcons name="fire" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
-          <Text style={[styles.recipeNutritionText, { marginRight: Spacings.m }]}>500 kcal</Text>
-          <SimpleLineIcons name="clock" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
-          <Text style={styles.recipeNutritionText}>1 hr and 40 mins</Text>
+        <View style={[styles.listContainer, { marginBottom: Spacings.m }]}>
+          <Text style={styles.listTitle}>Ingredients</Text>
+          {recipe.ingredients.map((ingredient) => (
+            <View style={styles.itemContainer}>
+              <View style={styles.dot} />
+              <Text style={styles.listItemText}>{ingredient.name} {ingredient.measurement}</Text>
+            </View> 
+          ))}
         </View>
-        <Button
-          title='Make it vegan!'
-          style={[styles.veganButton, { marginBottom: Spacings.m }]}
-          textStyle={{ fontSize: Sizes.h3, color: Colors.onTertiary, marginRight: Spacings.m }}
-          rightIcon={<Entypo name="leaf" size={20} color={Colors.onPrimary} />}
-          onPress={() => {}} />
-      </View>
-    </>
-  )
-}
-
-interface RenderItemProps {
-  item: any;
-  section: Section;
-}
-
-function RenderItem({ item, section }: RenderItemProps) {
-  return (
-    <View style={styles.sectionItem}>
-      <View style={styles.dot} />
-      {section.title === 'Ingredients' && (
-        <Text>{item.name} {item.measurement}</Text>
-      ) || section.title === 'Instructions' && (
-        <Text>{item.step}</Text>
-      )}
-    </View> 
-  )
+        <View style={styles.listContainer}>
+          <Text style={styles.listTitle}>Instructions</Text>
+          {recipe.instructions.map((instruction) => (
+            <View style={styles.itemContainer}>
+              <View style={styles.dot} />
+              <Text style={styles.listItemText}>{instruction.step}</Text>
+            </View> 
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -215,11 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gray_100,
     marginBottom: Spacings.m,
   },
-  ingredientsText: {
-    fontSize: Sizes.l,
-    color: Colors.text,
-    marginBottom: Spacings.xs
-  },
   veganButton: {
     backgroundColor: Colors.tertiary,
     borderRadius: 10,
@@ -227,19 +186,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems  : 'center',
   },
-  sectionTitleContainer: {
+  veganButtonText: {
+    fontSize: Sizes.h3,
+    color: Colors.onTertiary,
+    marginRight: Spacings.m 
+  },
+  listContainer: {
     backgroundColor: Colors.gray_100,
     padding: Spacings.m,
     marginHorizontal: Spacings.m,
-    borderStartStartRadius: 20,
-    borderStartEndRadius: 20
+    borderRadius: 20
   },
-  sectionItem: {
+  listTitle: {
+    fontSize: Sizes.h3,
+    marginBottom: Spacings.s
+  },
+  itemContainer: {
     backgroundColor: Colors.gray_100,
     flexDirection: 'row',
-    marginHorizontal: Spacings.m,
     paddingHorizontal: Spacings.m,
-    paddingBottom: Spacings.m
+    paddingVertical: Spacings.s
   },
   dot: {
     width: 6,
@@ -249,13 +215,9 @@ const styles = StyleSheet.create({
     marginRight: Spacings.s,
     marginTop: 6
   },
-  footer: {
-    backgroundColor: Colors.gray_100,
-    height: 40,
-    marginHorizontal: Spacings.m,
-    marginTop: -17,
-    marginBottom: Spacings.m,
-    borderEndStartRadius: 20,
-    borderEndEndRadius: 20
-  }
+  listItemText: {
+    fontSize: Sizes.l,
+    color: Colors.text,
+    marginBottom: Spacings.xs
+  },
 });
