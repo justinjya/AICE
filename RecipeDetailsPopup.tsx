@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, Sizes, Spacings } from '@values';
 import { Button } from '@components';
 
-export default function RecipeDetailsPopup() {
+export default function RecipeDetailsPopUp() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInMealPlan, setIsInMealPlan] = useState(false);
 

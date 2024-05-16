@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { Colors } from '@values';
-import RegisterPage from './RegisterPage';
+import RegisterPage from 'RegisterPage';
 import LoginPage from 'LoginPage';
-import RecipeDetailsPopup from 'RecipeDetailsPopup';
+import RecipeDetailsPopUp from 'RecipeDetailsPopUp';
+import FiltersPopUp from 'FiltersPopUp';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       {/* <LoginPage /> */}
-      <RecipeDetailsPopup />
+      {/* <RecipeDetailsPopUp /> */}
+      <FiltersPopUp />
       <StatusBar style="auto" />
     </SafeAreaView>
   );

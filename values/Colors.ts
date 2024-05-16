@@ -10,5 +10,6 @@ export default {
     text: '#2B2B2B',
     gray_100: '#E4E4E4',
     gray_200: '#CACACA',
-    orange_600: '#D35C25'
+    orange_600: '#D35C25',
+    purple_100: '#D7C6FC',
 }
