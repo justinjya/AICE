@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, Pressable, Dimensions } from 'react-native';
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Spacings, Sizes } from '@values';
@@ -14,15 +14,17 @@ interface CardProps {
   },
 }
 
-export default function RecipeCard({ recipe }: CardProps) {
+export default function FullWidthRecipeCard({ recipe }: CardProps) {
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <Pressable style={{ width: screenWidth, height: 274 }}>
       <Image
         source={{ uri: recipe.imageUrl }}
-        style={styles.background} />
+        style={[styles.background, { width: screenWidth, height: 274 }]} />
       <LinearGradient
         colors={['rgba(0,0,0,0.25)', 'transparent', 'transparent', 'rgba(0,0,0,0.7)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.8)']}
-        style={styles.background}
+        style={[styles.background, { width: screenWidth, height: 274 }]}
       />
       {/* <IconButton
         icon={
@@ -37,33 +39,26 @@ export default function RecipeCard({ recipe }: CardProps) {
         <View style={styles.detailsContainer}>
           <SimpleLineIcons 
             name='fire'
-            size={Sizes.m}
+            size={Sizes.l}
             color={Colors.primary}
-            style={{ marginRight: Spacings.xxs }} />
+            style={{ marginRight: Spacings.s }} />
           <Text style={styles.textDetails}>{recipe.calories} kcal</Text>
           <SimpleLineIcons
             name='clock'
-            size={Sizes.m}
+            size={Sizes.l}
             color={Colors.primary}
-            style={{ marginRight: Spacings.xxs }} />
+            style={{ marginRight: Spacings.s }} />
           <Text style={styles.textDetails}>{recipe.duration} mins</Text>
         </View>
         <Text style={styles.textTitle}>{recipe.name}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: 171,
-    height: 188,
-  },
   background: {
-    width: 171,
-    height: 188,
     position: 'absolute',
-    borderRadius: 10
   },
   textContainer: {
     flex: 1,
@@ -77,12 +72,12 @@ const styles = StyleSheet.create({
   },
   textDetails: {
     color: Colors.text_light,
-    fontSize: Sizes.m,
-    marginRight: Spacings.xs
+    fontSize: Sizes.l,
+    marginRight: Spacings.s_m,
   },
   textTitle: {
     color: Colors.text_light,
-    fontSize: Sizes.h2,
+    fontSize: Sizes.h1,
     textAlignVertical: 'bottom'
   },
 });

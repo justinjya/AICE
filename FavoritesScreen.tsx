@@ -1,4 +1,5 @@
-import { View, SafeAreaView, StyleSheet, Text, FlatList } from 'react-native';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
@@ -35,48 +36,59 @@ const recipes = [
   }
 ]
 
+interface HeaderComponentProps {
+  filterActiveState: {
+    isFilterActive: boolean;
+    setIsFilterActive: (value: boolean) => void;
+  };
+}
+
+function HeaderComponent({
+  filterActiveState: { isFilterActive, setIsFilterActive }
+ }: HeaderComponentProps) {
+  const insets = useSafeAreaInsets()
+
+  return (
+    <View style={{ marginTop: insets.top, paddingHorizontal: Spacings.m }}>
+      <View style={[styles.titleContainer, { marginBottom: Spacings.xxl }]}>
+        <Text style={[styles.title]}>Favorites</Text>
+        <IconButton
+          icon={isFilterActive ? (
+            <FontAwesome5
+              name='sliders-h'
+              size={15}
+              color={Colors.onSecondary} />
+          ) : (
+            <FontAwesome5
+              name='sliders-h'
+              size={15}
+              color={Colors.secondary} />
+          )}
+          style={[styles.filterIcon, { backgroundColor: isFilterActive ? Colors.secondary : Colors.onSecondary }]}
+          onPress={() => setIsFilterActive(!isFilterActive)}
+          />
+      </View>
+    </View>
+  )
+}
+
 export default function FavoritesScreen() {
   const [isFilterActive, setIsFilterActive] = useState(false);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={['left', 'right']}>
       <FlatList
         ListHeaderComponent={
-          <View style={{ paddingHorizontal: Spacings.m }}>
-            <View style={[styles.titleContainer, { marginBottom: Spacings.xxl }]}>
-              <Text style={[styles.title]}>Favorites</Text>
-              <IconButton
-                icon={isFilterActive ? (
-                  <FontAwesome5
-                    name='sliders-h'
-                    size={15}
-                    color={Colors.onSecondary} />
-                ) : (
-                  <FontAwesome5
-                    name='sliders-h'
-                    size={15}
-                    color={Colors.secondary} />
-                )}
-                style={[styles.filterIcon, { backgroundColor: isFilterActive ? Colors.secondary : Colors.onSecondary }]}
-                onPress={() => setIsFilterActive(!isFilterActive)}
-                />
-            </View>
-          </View>
+          <HeaderComponent filterActiveState={{ isFilterActive, setIsFilterActive }} />
         }
         data={recipes}
         numColumns={2}
         keyExtractor={item => item.id.toString()}
         columnWrapperStyle={styles.cardsContainer}
         renderItem={({ item }: any) => (
-          <RecipeCard
-            recipe={item}
-            style={{ width: 171, height: 188 }}
-            backgroundStyle={{ borderRadius: 10 }}
-            detailsIconSize={Sizes.m}
-            detailsIconStyle={{ marginRight: Spacings.xxs }}
-            detailsTextStyle={styles.smallCardTextDetails}
-            titleTextStyle={styles.smallCardTextTitle} />
-        )} />
+          <RecipeCard recipe={item} />
+        )}
+        style={{ height: '100%' }} />
     </SafeAreaView>
   );
 };

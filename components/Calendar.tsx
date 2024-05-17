@@ -3,12 +3,14 @@ import { useEffect, useRef } from 'react';
 import { Colors, Spacings, Sizes } from '@values';
 
 interface CalendarMonthProps {
+  mealPlans: Array<any>;
   year: number;
   month: number;
   onPress?: () => void;
 };
 
 interface CalendarProps {
+  mealPlans: Array<any>;
   onPress?: () => void;
 };
 
@@ -16,7 +18,7 @@ const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
-function CalendarMonth({ year, month, onPress }: CalendarMonthProps) {
+function CalendarMonth({ mealPlans, year, month, onPress }: CalendarMonthProps) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   
@@ -27,6 +29,18 @@ function CalendarMonth({ year, month, onPress }: CalendarMonthProps) {
   const paddingDaysEnd = Array.from({ length: paddingDaysEndLength }, () => null);
   
   const allDays = [...paddingDaysStart, ...days, ...paddingDaysEnd];
+
+  const isDateEqual = (date1: Date, date2: Date) => 
+    date1.getDate() === date2.getDate() && 
+    date1.getMonth() === date2.getMonth() && 
+    date1.getFullYear() === date2.getFullYear();
+
+  const isMealPlanned = (date: Date) => {
+    return mealPlans.some(meal => 
+      meal.date instanceof Date && 
+      isDateEqual(meal.date, date)
+    );
+  };
 
   return (
     <>
@@ -39,22 +53,31 @@ function CalendarMonth({ year, month, onPress }: CalendarMonthProps) {
         ))}
       </View>
       <View style={styles.monthContainer}>
-        {allDays.map((day, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.day, day !== null ? { backgroundColor: Colors.gray_100 } : { backgroundColor: 'transparent' }]}
-            onPress={onPress}
-          >
-            <Text style={day !== null ? styles.dayText : {}}>{day}</Text>
-            {/* {day && <View style={{ width: 4, height: 4, backgroundColor: Colors.primary, borderRadius: 50 }} />} */}
-          </TouchableOpacity>
-        ))}
+        {allDays.map((day, index) => {
+          const isPlanned = isMealPlanned(new Date(year, month, day as number));
+
+          return(
+            <TouchableOpacity
+              key={index}
+              style={[styles.day, day !== null ? { backgroundColor: Colors.gray_100 } : { backgroundColor: 'transparent' }]}
+              onPress={onPress}
+            >
+              <Text style={day !== null ? styles.dayText : {}}>{day}</Text>
+              {isPlanned ? 
+                <View style={[styles.dot, { backgroundColor: Colors.primary }]}/>
+                : 
+                <View style={[styles.dot, { backgroundColor: 'transparent' }]}/>
+              }
+            </TouchableOpacity>
+          )
+        }
+        )}
       </View>
     </>
   );
 };
 
-export default function Calendar({ onPress }: CalendarProps) {
+export default function Calendar({ mealPlans, onPress }: CalendarProps) {
   const months = Array.from({ length: 12 }, (_, i) => i);
   const scrollViewRef = useRef<ScrollView>(null);
   const currentMonth = new Date().getMonth();
@@ -66,7 +89,7 @@ export default function Calendar({ onPress }: CalendarProps) {
   return (
     <ScrollView ref={scrollViewRef}>
       {months.map((month) => (
-        <CalendarMonth key={month} year={2024} month={month} />
+        <CalendarMonth mealPlans={mealPlans} key={month} year={2024} month={month} />
       ))}
     </ScrollView>
   );
@@ -105,6 +128,12 @@ const styles = StyleSheet.create({
   dayText: {
     fontSize: Sizes.h2,
     marginBottom: Spacings.xxxs,
+  },
+  dot: {
+    width: 4,
+    height: 4,
+    backgroundColor: Colors.primary,
+    borderRadius: 50
   },
 });
   
