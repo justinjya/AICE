@@ -1,19 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Colors, Spacings } from '@values';
-import HomeScreen from 'HomeScreen';
-import FavoritesScreen from 'FavoritesScreen';
-import MealPlanMonthScreen from 'MealPlanMonthScreen';
-import MealPlanWeekScreen from 'MealPlanWeekScreen';
-import RecipeDetailsScreen from 'RecipeDetailsScreen';
-import AccountDetailsScreen from 'AccountDetailsScreen';
-import NotLoggedInAccountDetailsScreen from 'NotLoggedInAccountDetailsScreen';
-import RegisterPage from 'RegisterScreen';
-import LoginPage from 'LoginScreen';
-import FiltersPopUp from 'FiltersPopUp';
-import RecipeDetailsPopUp from 'RecipeDetailsPopup';
-import BottomNavBar from 'BottomNavBar';
+import { Colors } from '@values';
+import { BottomNavBar, FiltersPopUp, RecipeDetailsPopUp } from 'components';
+import {
+  HomeScreen,
+  FavoritesScreen,
+  MealPlanMonthScreen,
+  MealPlanWeekScreen,
+  RecipeDetailsScreen,
+  AccountDetailsScreen,
+  NotLoggedInAccountDetailsScreen,
+  RegisterScreen,
+  LoginScreen 
+} from 'screens';
 
 export default function App() {
   return ( 
@@ -25,8 +25,8 @@ export default function App() {
       {/* <MealPlanWeekScreen /> */}
       {/* <AccountDetailsScreen /> */}
       {/* <NotLoggedInAccountDetailsScreen /> */}
-      {/* <RegisterPage /> */}
-      {/* <LoginPage /> */}
+      {/* <RegisterScreen /> */}
+      {/* <LoginScreen /> */}
       {/* <FiltersPopUp /> */}
       {/* <RecipeDetailsPopUp /> */}
       <BottomNavBar />
@@ -38,6 +38,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.gray_100,
+    backgroundColor: Colors.background,
   },
 });

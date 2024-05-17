@@ -210,7 +210,8 @@ const styles = StyleSheet.create({
   dot: {
     width: 6,
     height: 6,
-    backgroundColor: Colors.text_light,
+    borderWidth: 1,
+    borderColor: Colors.secondary,
     borderRadius: 50,
     marginRight: Spacings.s,
     marginTop: 6

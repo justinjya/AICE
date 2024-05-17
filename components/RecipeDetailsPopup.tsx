@@ -26,12 +26,12 @@ export default function RecipeDetailsPopUp() {
             name={isFavorite ? 'heart' : 'heart-outline'}
             size={20}
             style={{ marginRight: Spacings.l }}
-            color={isFavorite ? Colors.error : Colors.text }
+            color={isFavorite ? Colors.error : Colors.text_dark }
           />
         }
         onPress={toggleFavorite}
         style={[styles.button, { marginBottom: Spacings.s }]}
-        textStyle={[styles.buttonText, { color: isFavorite ? Colors.error : Colors.text }]}
+        textStyle={[styles.buttonText, { color: isFavorite ? Colors.error : Colors.text_dark }]}
       />
       <Button
         title={isInMealPlan ? 'Remove from meal plan' : 'Add to meal plan'}
@@ -40,12 +40,12 @@ export default function RecipeDetailsPopUp() {
             name={isInMealPlan ? 'calendar-clear': 'calendar-clear-outline'}
             size={20}
             style={{ marginRight: Spacings.l }}
-            color={isInMealPlan ? Colors.error : Colors.text}
+            color={isInMealPlan ? Colors.error : Colors.text_dark}
           />
         }
         onPress={toggleMealPlan}
         style={[styles.button, { marginBottom: Spacings.xxxl }]}
-        textStyle={[styles.buttonText, { color: isInMealPlan ? Colors.error : Colors.text }]}
+        textStyle={[styles.buttonText, { color: isInMealPlan ? Colors.error : Colors.text_dark }]}
       />
     </View>
   );

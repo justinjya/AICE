@@ -28,7 +28,7 @@ export default function InputField({
     <>
       {title ? (
         <View style={styles.titleContainer}>
-          <Text style={[styles.title, { color: isError ? Colors.error : Colors.text, marginRight: Spacings.s }]}>{title}</Text>
+          <Text style={[styles.title, { color: isError ? Colors.error : Colors.text_dark, marginRight: Spacings.s }]}>{title}</Text>
           {isError ? (
             <>
               <AntDesign
@@ -43,7 +43,7 @@ export default function InputField({
       ) : null}
       <View style={[styles.inputContainer, { borderColor: isError ? Colors.error : Colors.gray_200 } , style]}>
         <TextInput
-          style={[styles.inputText, { color: isError ? Colors.error : Colors.onBackground}]}
+          style={[styles.inputText, { color: isError ? Colors.error : Colors.text_dark}]}
           placeholder={placeholder}
           value={inputProps.inputText}
           onChangeText={inputProps.setInputText}
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   title: {
-    color: Colors.text,
     fontSize: Sizes.h3,
     alignSelf: 'flex-start',
   },
@@ -90,6 +89,5 @@ const styles = StyleSheet.create({
   inputText: {
     width: '90%',
     height: '100%',
-    color: Colors.text,
   },
 });

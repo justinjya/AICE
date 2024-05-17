@@ -1,7 +1,8 @@
-import { Text, StyleSheet, View, Pressable } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import { Colors, Sizes, Spacings } from "@values";
 import InputField from "./InputField";
+import IconButton from "./IconButton";
 
 interface EditableFieldProps {
   title?: string;
@@ -43,14 +44,16 @@ export default function EditableField({
             ) : (
               <Text style={styles.text}>{attribute}</Text>
             )}
-            <Pressable onPress={() => setIsEditing(true)}>
-              <Feather
-                name="edit"
-                size={20}
-                color={Colors.secondary}
-                style={{ marginRight: Spacings.l }}
-              />
-            </Pressable>
+            <IconButton
+              icon={
+                <Feather
+                  name="edit"
+                  size={20}
+                  color={Colors.secondary}
+                  style={{ marginRight: Spacings.l }}
+                />
+              }
+              onPress={() => setIsEditing(true)} />
           </View>
         </>
       )}
