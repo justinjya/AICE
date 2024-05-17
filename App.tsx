@@ -4,13 +4,15 @@ import { Colors } from '@values';
 import RegisterPage from './RegisterPage';
 import HomeScreen from 'HomeScreen';
 import FavoritesScreen from 'FavoritesScreen';
+import MealPlanMonthScreen from 'MealPlanMonthScreen';
 
 export default function App() {
   return ( 
     <SafeAreaView style={styles.container}>
       {/* <RegisterPage /> */}
       {/* <HomeScreen /> */}
-      <FavoritesScreen />
+      {/* <FavoritesScreen /> */}
+      <MealPlanMonthScreen />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
