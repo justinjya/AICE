@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors, Spacings } from '@values';
-import RegisterPage from './RegisterPage';
 import HomeScreen from 'HomeScreen';
 import FavoritesScreen from 'FavoritesScreen';
 import MealPlanMonthScreen from 'MealPlanMonthScreen';
@@ -10,6 +9,8 @@ import MealPlanWeekScreen from 'MealPlanWeekScreen';
 import RecipeDetailsScreen from 'RecipeDetailsScreen';
 import AccountDetailsScreen from 'AccountDetailsScreen';
 import NotLoggedInAccountDetailsScreen from 'NotLoggedInAccountDetailsScreen';
+import RegisterPage from 'RegisterScreen';
+import LoginPage from 'LoginScreen';
 
 export default function App() {
   return ( 
@@ -20,8 +21,9 @@ export default function App() {
       {/* <MealPlanMonthScreen /> */}
       {/* <MealPlanWeekScreen /> */}
       {/* <AccountDetailsScreen /> */}
-      <NotLoggedInAccountDetailsScreen />
+      {/* <NotLoggedInAccountDetailsScreen /> */}
       {/* <RegisterPage /> */}
+      <LoginPage />
       <StatusBar style="auto" />
     </SafeAreaProvider>
   );
