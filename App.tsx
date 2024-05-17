@@ -13,8 +13,8 @@ export default function App() {
       {/* <RegisterPage /> */}
       {/* <HomeScreen /> */}
       {/* {/* <FavoritesScreen /> */}
-      <MealPlanWeekScreen />
       {/* <MealPlanMonthScreen /> */}
+      <MealPlanWeekScreen />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
