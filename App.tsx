@@ -11,6 +11,7 @@ import AccountDetailsScreen from 'AccountDetailsScreen';
 import NotLoggedInAccountDetailsScreen from 'NotLoggedInAccountDetailsScreen';
 import RegisterPage from 'RegisterScreen';
 import LoginPage from 'LoginScreen';
+import FiltersPopUp from 'FiltersPopUp';
 
 export default function App() {
   return ( 
@@ -23,7 +24,8 @@ export default function App() {
       {/* <AccountDetailsScreen /> */}
       {/* <NotLoggedInAccountDetailsScreen /> */}
       {/* <RegisterPage /> */}
-      <LoginPage />
+      {/* <LoginPage /> */}
+      <FiltersPopUp />
       <StatusBar style="auto" />
     </SafeAreaProvider>
   );
@@ -32,6 +34,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.gray_100,
   },
 });
