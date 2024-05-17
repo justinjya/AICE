@@ -12,6 +12,8 @@ import NotLoggedInAccountDetailsScreen from 'NotLoggedInAccountDetailsScreen';
 import RegisterPage from 'RegisterScreen';
 import LoginPage from 'LoginScreen';
 import FiltersPopUp from 'FiltersPopUp';
+import RecipeDetailsPopUp from 'RecipeDetailsPopup';
+import BottomNavBar from 'BottomNavBar';
 
 export default function App() {
   return ( 
@@ -25,7 +27,9 @@ export default function App() {
       {/* <NotLoggedInAccountDetailsScreen /> */}
       {/* <RegisterPage /> */}
       {/* <LoginPage /> */}
-      <FiltersPopUp />
+      {/* <FiltersPopUp /> */}
+      {/* <RecipeDetailsPopUp /> */}
+      <BottomNavBar />
       <StatusBar style="auto" />
     </SafeAreaProvider>
   );
