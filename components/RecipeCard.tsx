@@ -11,12 +11,13 @@ interface CardProps {
     calories: number,
     duration: number,
     imageUrl: string,
-  },
+  };
+  onPress?: () => void;
 }
 
-export default function RecipeCard({ recipe }: CardProps) {
+export default function RecipeCard({ recipe, onPress }: CardProps) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} activeOpacity={0.8} onPress={onPress}>
       <Image
         source={{ uri: recipe.imageUrl }}
         style={styles.background} />

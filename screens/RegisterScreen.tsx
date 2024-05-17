@@ -1,11 +1,16 @@
 import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
 import React, { useState } from 'react';
 
-export default function RegisterScreen() {
+interface RegisterScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +27,7 @@ export default function RegisterScreen() {
       <Button
         title='Cancel'
         style={styles.cancelButton}
-        onPress={() => {}}
+        onPress={() => navigation.goBack()}
         disabled={false} />
       <Text style={styles.title}>Create an Account</Text>
       <InputField

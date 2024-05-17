@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
@@ -165,7 +166,7 @@ function MealsSection({ array, schedule, date }: MealSectionProps) {
         <View style={styles.emptySection} />
       ) : (
         meals.map(recipe => (
-          <View style={{ marginBottom: Spacings.xxs }}>
+          <View key={recipe.id} style={{ marginBottom: Spacings.xxs }}>
             <LongRecipeCard
               key={recipe.id}
               recipe={recipe} />
@@ -176,16 +177,23 @@ function MealsSection({ array, schedule, date }: MealSectionProps) {
   )
 }
 
-export default function MealPlanWeekScreen() {
+interface MealPlanWeekScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function MealPlanWeekScreen({ navigation }: MealPlanWeekScreenProps) {
   const [selectedDay, setSelectedDay] = useState(new Date() as Date);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.titleContainer, { marginBottom: Spacings.xxl }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity style={{ marginRight: Spacings.l }}>
-            <Ionicons name="chevron-back" size={24} color={Colors.text_dark} />
-          </TouchableOpacity>
+          <IconButton
+           icon={
+             <Ionicons name="chevron-back" size={24} color={Colors.text_dark} />
+           }
+           style={{ marginRight: Spacings.l }}
+           onPress={() => navigation.goBack()}/>
           <Text style={styles.title}>Meal Plan</Text>
         </View>
         <IconButton
@@ -194,7 +202,8 @@ export default function MealPlanWeekScreen() {
               name='calendar-clear-outline'
               size={24}
               color={Colors.secondary} />
-          } />
+          }
+          onPress={() => navigation.goBack()}/>
       </View>
       <WeekHeader selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
       <MealsSection array={mealPlans} schedule='Breakfast' date={selectedDay} />

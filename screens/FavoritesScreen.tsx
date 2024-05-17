@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useState } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
@@ -72,7 +73,11 @@ function HeaderComponent({
   )
 }
 
-export default function FavoritesScreen() {
+interface FavoritesScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function FavoritesScreen({ navigation }: FavoritesScreenProps) {
   const [isFilterActive, setIsFilterActive] = useState(false);
 
   return (
@@ -86,7 +91,7 @@ export default function FavoritesScreen() {
         keyExtractor={item => item.id.toString()}
         columnWrapperStyle={styles.cardsContainer}
         renderItem={({ item }: any) => (
-          <RecipeCard recipe={item} />
+          <RecipeCard recipe={item} onPress={() => navigation.navigate('FS_Details')} />
         )}
         style={{ height: '100%' }} />
     </SafeAreaView>

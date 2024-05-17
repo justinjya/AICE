@@ -1,11 +1,16 @@
 import { Text, StyleSheet, Platform, StatusBar as StatusBarAPI } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useState } from 'react';
 import { StatusBar } from "expo-status-bar";
 import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
 
-export default function LoginScreen() {
+interface LoginScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function LoginScreen({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordFalse, setIsPasswordFalse] = useState(false);
@@ -34,11 +39,11 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: Platform.OS === 'android' ? StatusBarAPI.currentHeight : 0 }]}>
+    <SafeAreaView style={styles.container}>
       <Button
         title='Cancel'
         style={styles.cancelButton}
-        onPress={() => {}} />
+        onPress={() => navigation.goBack()} />
       <Text style={styles.title}>Login</Text>
       <InputField
         title='Email'

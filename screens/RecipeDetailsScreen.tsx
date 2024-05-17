@@ -1,9 +1,10 @@
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Spacings, Sizes, Colors } from "@values";
-import { Button } from "@components";
+import { Button, IconButton } from "@components";
 
 const recipe = { 
   id: 1,
@@ -105,7 +106,11 @@ const recipe = {
   imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
 }
 
-export default function RecipeDetailsScreen(){
+interface RecipeDetailsScreenProps {
+  navigation: NavigationProp<ParamListBase>
+}
+
+export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenProps) {
   const insets = useSafeAreaInsets();
 
   return(
@@ -113,7 +118,12 @@ export default function RecipeDetailsScreen(){
       <ScrollView>
         <Image source={{ uri: recipe.imageUrl }} style={{ height: 360 }} />
         <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
-        <Ionicons name="chevron-back" size={24} style={{ position: 'absolute', top: insets.top, left: 10, color: Colors.onPrimary }} />
+        <IconButton
+          icon={
+            <Ionicons name="chevron-back" size={24} style={{ color: Colors.onPrimary }} />
+          }
+          style={{ position: 'absolute', top: insets.top, left: 10 }}
+          onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.title}>Classic Lasagne</Text>
@@ -135,7 +145,7 @@ export default function RecipeDetailsScreen(){
         <View style={[styles.listContainer, { marginBottom: Spacings.m }]}>
           <Text style={styles.listTitle}>Ingredients</Text>
           {recipe.ingredients.map((ingredient) => (
-            <View style={styles.itemContainer}>
+            <View key={ingredient.id} style={styles.itemContainer}>
               <View style={styles.dot} />
               <Text style={styles.listItemText}>{ingredient.name} {ingredient.measurement}</Text>
             </View> 
@@ -144,7 +154,7 @@ export default function RecipeDetailsScreen(){
         <View style={styles.listContainer}>
           <Text style={styles.listTitle}>Instructions</Text>
           {recipe.instructions.map((instruction) => (
-            <View style={styles.itemContainer}>
+            <View key={instruction.id} style={styles.itemContainer}>
               <View style={styles.dot} />
               <Text style={styles.listItemText}>{instruction.step}</Text>
             </View> 

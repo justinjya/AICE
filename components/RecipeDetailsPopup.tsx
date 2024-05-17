@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Sizes, Spacings } from '@values';
-import { Button } from '@components';
+import Button from './Button';
 
 export default function RecipeDetailsPopUp() {
   const [isFavorite, setIsFavorite] = useState(false);

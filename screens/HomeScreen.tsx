@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useState, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
@@ -44,12 +45,14 @@ interface HeaderComponentProps {
   activeIndexState: {
     activeIndex: number;
     setActiveIndex: (value: number) => void;
-  }
+  };
+  navigation: NavigationProp<ParamListBase>;
 }
 
 function HeaderComponent({ 
   filterActiveState: { isFilterActive, setIsFilterActive }, 
-  activeIndexState: { activeIndex, setActiveIndex }
+  activeIndexState: { activeIndex, setActiveIndex },
+  navigation
 }: HeaderComponentProps) {
   const insets = useSafeAreaInsets();
   const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 });
@@ -74,15 +77,14 @@ function HeaderComponent({
         viewabilityConfig={viewabilityConfig.current}
         contentContainerStyle={{ marginBottom: Spacings.s }}
         renderItem={({ item }: any) => (
-          <FullWidthRecipeCard recipe={item} />
+          <FullWidthRecipeCard recipe={item} onPress={() => navigation.navigate('HS_Details')} />
         )}
       />
       <View style={{ paddingHorizontal: Spacings.m }}>
         <Pagination
           activeIndex={activeIndex}
           arr={recipes}
-          style={{ width: 74, marginBottom: Spacings.l }}
-        />
+          style={{ width: 74, marginBottom: Spacings.l }} />
         <View style={[styles.titleContainer, { marginBottom: Spacings.s }]}>
           <Text style={[styles.title]}>All Recipes</Text>
           <IconButton
@@ -98,15 +100,18 @@ function HeaderComponent({
                 color={Colors.secondary} />
             )}
             style={[styles.filterIcon, { backgroundColor: isFilterActive ? Colors.secondary : Colors.onSecondary }]}
-            onPress={() => setIsFilterActive(!isFilterActive)}
-            />
+            onPress={() => setIsFilterActive(!isFilterActive)} />
         </View>
       </View>
     </>
   )
 }
 
-export default function HomeScreen() {
+interface HomeScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [isFilterActive, setIsFilterActive] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -116,14 +121,15 @@ export default function HomeScreen() {
         ListHeaderComponent={
           <HeaderComponent 
             filterActiveState={{ isFilterActive, setIsFilterActive }} 
-            activeIndexState={{ activeIndex, setActiveIndex }} />
+            activeIndexState={{ activeIndex, setActiveIndex }}
+            navigation={navigation} />
         }
         data={recipes}
         numColumns={2}
         keyExtractor={item => item.id.toString()}
         columnWrapperStyle={styles.cardsContainer}
         renderItem={({ item }) =>
-          <RecipeCard recipe={item} />
+          <RecipeCard recipe={item} onPress={() => navigation.navigate('HS_Details')} />
         } 
       />
     </SafeAreaView>

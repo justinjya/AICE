@@ -2,8 +2,13 @@ import { Text, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors, Sizes, Spacings } from "@values";
 import { Button } from '@components';
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
-export default function NotLoggedInAccountDetailsScreen() {
+interface NotLoggedInAccountDetailsScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function NotLoggedInAccountDetailsScreen({ navigation }: NotLoggedInAccountDetailsScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Account Details</Text>
@@ -12,10 +17,12 @@ export default function NotLoggedInAccountDetailsScreen() {
         title='Create an account'
         style={{ marginBottom: Spacings.xs }}
         textStyle={[styles.text, { textDecorationLine: 'underline' }]}
+        onPress={() => navigation.navigate('AS_Register')}
       />
       <Button
         title='Login to an existing account'
         textStyle={[styles.text, { textDecorationLine: 'underline' }]}
+        onPress={() => navigation.navigate('AS_Login')}
       />
     </SafeAreaView>
   );

@@ -11,14 +11,15 @@ interface CardProps {
     calories: number,
     duration: number,
     imageUrl: string,
-  },
+  };
+  onPress?: () => void;
 }
 
-export default function FullWidthRecipeCard({ recipe }: CardProps) {
+export default function FullWidthRecipeCard({ recipe, onPress }: CardProps) {
   const screenWidth = Dimensions.get('window').width;
 
   return (
-    <Pressable style={{ width: screenWidth, height: 274 }}>
+    <Pressable style={{ width: screenWidth, height: 274 }} onPress={onPress}>
       <Image
         source={{ uri: recipe.imageUrl }}
         style={[styles.background, { width: screenWidth, height: 274 }]} />

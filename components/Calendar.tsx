@@ -89,7 +89,12 @@ export default function Calendar({ mealPlans, onPress }: CalendarProps) {
   return (
     <ScrollView ref={scrollViewRef}>
       {months.map((month) => (
-        <CalendarMonth mealPlans={mealPlans} key={month} year={2024} month={month} />
+        <CalendarMonth 
+          mealPlans={mealPlans}
+          key={month}
+          year={2024}
+          month={month}
+          onPress={onPress} />
       ))}
     </ScrollView>
   );

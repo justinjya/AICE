@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Spacings, Sizes } from '@values';
 import { Calendar } from '@components';
 
@@ -66,11 +67,15 @@ const mealPlans = [
   },
 ];
 
-export default function MealPlanMonthScreen() {
+interface MealPlanMonthProps {
+  navigation: NavigationProp<ParamListBase>
+}
+
+export default function MealPlanMonthScreen({ navigation }: MealPlanMonthProps) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Meal Plan</Text>
-      <Calendar mealPlans={mealPlans} />
+      <Calendar mealPlans={mealPlans} onPress={() => navigation.navigate('MS_MealPlanWeek')} />
     </SafeAreaView>
   );
 }

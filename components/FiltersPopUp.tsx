@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, TextInput } from "react-native";
 import React, { useState } from 'react';
 import { Colors, Sizes, Spacings } from '@values';
-import { Button } from '@components';
+import Button from './Button';
 
 const ingredients = [
   { id: 1, name: 'Apple' },
