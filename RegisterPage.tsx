@@ -1,7 +1,7 @@
 import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { CredentialInput, Button } from '@components';
+import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
 import React, { useState } from 'react';
 
@@ -25,17 +25,17 @@ export default function RegisterPage() {
         onPress={() => {}}
         disabled={false} />
       <Text style={styles.title}>Create an Account</Text>
-      <CredentialInput
+      <InputField
         title='Name'
         placeholder='Name' 
         inputProps={{ inputText: name, setInputText: setName }} 
         style={{ marginBottom: Spacings.m }} />
-      <CredentialInput
+      <InputField
         title='Email'
         placeholder='Email' 
         inputProps={{ inputText: email, setInputText: setEmail }} 
         style={{ marginBottom: Spacings.m }} />
-      <CredentialInput
+      <InputField
         title='Password'
         placeholder='Password' 
         inputProps={{ inputText: password, setInputText: setPassword }} 
@@ -43,7 +43,7 @@ export default function RegisterPage() {
         password={true} />
       <Button
         title='Create Account'
-        style={styles.createAccountButton}
+        style={[styles.createAccountButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
         textStyle={styles.createAccountButtonText}
         onPress={() => {console.log('Create Account')}}
         disabled={isButtonDisabled} />
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
   createAccountButton: {
     height: 42,
     backgroundColor: Colors.primary,
-    opacity: 0.5,
     borderRadius: 10,
     borderColor: Colors.orange_600,
     borderWidth: 1,

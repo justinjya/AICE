@@ -8,6 +8,8 @@ import FavoritesScreen from 'FavoritesScreen';
 import MealPlanMonthScreen from 'MealPlanMonthScreen';
 import MealPlanWeekScreen from 'MealPlanWeekScreen';
 import RecipeDetailsScreen from 'RecipeDetailsScreen';
+import AccountDetailsScreen from 'AccountDetailsScreen';
+import NotLoggedInAccountDetailsScreen from 'NotLoggedInAccountDetailsScreen';
 
 export default function App() {
   return ( 
@@ -17,6 +19,8 @@ export default function App() {
       {/* <FavoritesScreen /> */}
       {/* <MealPlanMonthScreen /> */}
       {/* <MealPlanWeekScreen /> */}
+      {/* <AccountDetailsScreen /> */}
+      <NotLoggedInAccountDetailsScreen />
       {/* <RegisterPage /> */}
       <StatusBar style="auto" />
     </SafeAreaProvider>
