@@ -11,14 +11,14 @@ interface CardProps {
     calories: number,
     duration: number,
     imageUrl: string,
-  }
-}
+  };
+  onPress?: () => void;
+  onEllipsisPress?: () => void;
+};
 
-export default function LongRecipeCard({ 
-  recipe,
-}: CardProps) {
+export default function LongRecipeCard({ recipe, onPress, onEllipsisPress }: CardProps) {
   return (
-    <TouchableOpacity style={styles.cardContainer} activeOpacity={0.8}>
+    <TouchableOpacity style={styles.cardContainer} activeOpacity={0.8} onPress={onPress}>
       <Image
         source={{ uri: recipe.imageUrl }}
         style={styles.background} />
@@ -51,7 +51,8 @@ export default function LongRecipeCard({
             size={23}
             color={Colors.onPrimary}
             style={{ paddingRight: Spacings.m }} />
-        } />
+        }
+        onPress={onEllipsisPress} />
     </TouchableOpacity>
   )
 }

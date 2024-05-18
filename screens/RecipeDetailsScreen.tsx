@@ -3,8 +3,9 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from 'react';
 import { Spacings, Sizes, Colors } from "@values";
-import { Button, IconButton } from "@components";
+import { Button, IconButton, RecipeDetailsModal } from "@components";
 
 const recipe = { 
   id: 1,
@@ -112,6 +113,11 @@ interface RecipeDetailsScreenProps {
 
 export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenProps) {
   const insets = useSafeAreaInsets();
+  const [isRecipeDetailsModalVisible, setIsRecipeDetailsModalVisible] = useState(false);
+
+  const toggleRecipeDetailsModal = () => {
+    setIsRecipeDetailsModalVisible(!isRecipeDetailsModalVisible);
+  }
 
   return(
     <SafeAreaView edges={['left', 'right']}>
@@ -127,7 +133,11 @@ export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenP
         <View style={styles.container}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.title}>Classic Lasagne</Text>
-            <Entypo name="dots-three-horizontal" size={20} style={{ marginTop: Spacings.m, color: Colors.onBackground}} />
+            <IconButton
+              icon={
+                <Entypo name="dots-three-horizontal" size={20} style={{ marginTop: Spacings.m, color: Colors.onBackground}} />
+              }
+              onPress={toggleRecipeDetailsModal} />
           </View>
           <View style={styles.recipeNutritionContainer}>
             <SimpleLineIcons name="fire" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
@@ -160,6 +170,10 @@ export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenP
             </View> 
           ))}
         </View>
+        <RecipeDetailsModal
+          isVisible={isRecipeDetailsModalVisible} 
+          setIsVisible={setIsRecipeDetailsModalVisible}
+          navigation={navigation} />
       </ScrollView>
     </SafeAreaView>
   );

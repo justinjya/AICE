@@ -4,7 +4,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
-import { LongRecipeCard, IconButton } from '@components';
+import { LongRecipeCard, IconButton, RecipeDetailsModal } from '@components';
 
 const mealPlans = [
   {
@@ -139,9 +139,12 @@ interface MealSectionProps {
   array: any[];
   schedule: string;
   date?: Date;
+  onCardPress?: () => void;
+  onAddPress?: () => void;
+  onCardEllipsisPress?: () => void;
 };
 
-function MealsSection({ array, schedule, date }: MealSectionProps) {
+function MealsSection({ array, schedule, date, onCardPress, onAddPress, onCardEllipsisPress }: MealSectionProps) {
   const meals = array.filter(meal => 
     meal.schedule === schedule && 
     meal.date instanceof Date && 
@@ -160,7 +163,8 @@ function MealsSection({ array, schedule, date }: MealSectionProps) {
               size={24}
               color={Colors.text_dark}
               style={{ opacity: 0.5 }} />
-          } />
+          }
+          onPress={onAddPress} />
       </View>
       {meals.length === 0 ? (
         <View style={styles.emptySection} />
@@ -169,7 +173,9 @@ function MealsSection({ array, schedule, date }: MealSectionProps) {
           <View key={recipe.id} style={{ marginBottom: Spacings.xxs }}>
             <LongRecipeCard
               key={recipe.id}
-              recipe={recipe} />
+              recipe={recipe}
+              onPress={onCardPress}
+              onEllipsisPress={onCardEllipsisPress} />
           </View>
         ))
       )}
@@ -183,6 +189,11 @@ interface MealPlanWeekScreenProps {
 
 export default function MealPlanWeekScreen({ navigation }: MealPlanWeekScreenProps) {
   const [selectedDay, setSelectedDay] = useState(new Date() as Date);
+  const [isRecipeDetailsModalVisible, setIsRecipeDetailsModalVisible] = useState(false);
+
+  const toggleRecipeDetailsModal = () => {
+    setIsRecipeDetailsModalVisible(!isRecipeDetailsModalVisible);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -206,9 +217,25 @@ export default function MealPlanWeekScreen({ navigation }: MealPlanWeekScreenPro
           onPress={() => navigation.goBack()}/>
       </View>
       <WeekHeader selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
-      <MealsSection array={mealPlans} schedule='Breakfast' date={selectedDay} />
-      <MealsSection array={mealPlans} schedule='Lunch' date={selectedDay} />
-      <MealsSection array={mealPlans} schedule='Dinner' date={selectedDay} />
+      <MealsSection 
+        array={mealPlans} 
+        schedule='Breakfast' 
+        date={selectedDay}
+        onCardPress={() => navigation.navigate('MS_Details')}
+        onCardEllipsisPress={toggleRecipeDetailsModal} />
+      <MealsSection 
+        array={mealPlans} 
+        schedule='Lunch' 
+        date={selectedDay}
+        onCardPress={() => navigation.navigate('MS_Details')}
+        onCardEllipsisPress={toggleRecipeDetailsModal} />
+      <MealsSection 
+        array={mealPlans} 
+        schedule='Dinner' 
+        date={selectedDay}
+        onCardPress={() => navigation.navigate('MS_Details')}
+        onCardEllipsisPress={toggleRecipeDetailsModal} />
+      <RecipeDetailsModal isVisible={isRecipeDetailsModalVisible} setIsVisible={setIsRecipeDetailsModalVisible} />
     </SafeAreaView>
   )
 }

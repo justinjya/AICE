@@ -4,7 +4,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useState, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
-import { FullWidthRecipeCard, RecipeCard, IconButton, Pagination } from '@components';
+import { FullWidthRecipeCard, RecipeCard, IconButton, Pagination, FiltersModal } from '@components';
 
 const recipes = [
   { 
@@ -38,20 +38,20 @@ const recipes = [
 ]
 
 interface HeaderComponentProps {
+  filtersModalState: {
+    isFiltersModalVisible?: boolean;
+    setIsFiltersModalVisible: (value: boolean) => void;
+  };
   filterActiveState: {
     isFilterActive: boolean;
     setIsFilterActive: (value: boolean) => void;
-  };
-  activeIndexState: {
-    activeIndex: number;
-    setActiveIndex: (value: number) => void;
   };
   navigation: NavigationProp<ParamListBase>;
 }
 
 function HeaderComponent({ 
-  filterActiveState: { isFilterActive, setIsFilterActive }, 
-  activeIndexState: { activeIndex, setActiveIndex },
+  filtersModalState: { setIsFiltersModalVisible },
+  filterActiveState: { isFilterActive, setIsFilterActive },
   navigation
 }: HeaderComponentProps) {
   const insets = useSafeAreaInsets();
@@ -59,6 +59,8 @@ function HeaderComponent({
   const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
     setActiveIndex(viewableItems[0].index);
   });
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <>
@@ -100,7 +102,7 @@ function HeaderComponent({
                 color={Colors.secondary} />
             )}
             style={[styles.filterIcon, { backgroundColor: isFilterActive ? Colors.secondary : Colors.onSecondary }]}
-            onPress={() => setIsFilterActive(!isFilterActive)} />
+            onPress={() => setIsFiltersModalVisible(true)} />
         </View>
       </View>
     </>
@@ -112,16 +114,16 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
+  const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const [isFilterActive, setIsFilterActive] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <FlatList 
         ListHeaderComponent={
           <HeaderComponent 
-            filterActiveState={{ isFilterActive, setIsFilterActive }} 
-            activeIndexState={{ activeIndex, setActiveIndex }}
+            filtersModalState={{ setIsFiltersModalVisible }}
+            filterActiveState={{ isFilterActive, setIsFilterActive }}
             navigation={navigation} />
         }
         data={recipes}
@@ -132,6 +134,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           <RecipeCard recipe={item} onPress={() => navigation.navigate('HS_Details')} />
         } 
       />
+      <FiltersModal 
+        key={isFiltersModalVisible ? 'visible' : 'hidden'} 
+        isVisible={isFiltersModalVisible} 
+        setIsVisible={setIsFiltersModalVisible} />
     </SafeAreaView>
   );
 }

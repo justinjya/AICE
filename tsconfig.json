@@ -6,6 +6,8 @@
     "paths": {
       "@components": ["components"],
       "@values": ["values"],
+      "@screens": ["screens"],
+      "@navigation": ["navigation"],
     }
   }
 }

@@ -1,6 +1,7 @@
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, ScrollView, View, Text, TextInput } from "react-native";
 import React, { useState } from 'react';
 import { Colors, Sizes, Spacings } from '@values';
+import Modal from 'react-native-modal';
 import Button from './Button';
 
 const ingredients = [
@@ -62,9 +63,14 @@ const categories = [
   { id: 27, name: 'Cold Drink' },
 ];
 
+interface FiltersModalProps {
+  isVisible: boolean;
+  setIsVisible: (value: boolean) => void;
+}
+
 const ITEMS_PER_PAGE = 12;
 
-export default function FiltersPopUp() {
+export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalProps) {
   const [ingredientsToShow, setIngredientsToShow] = useState(ingredients.slice(0, ITEMS_PER_PAGE));
   const [categoriesToShow, setCategoriesToShow] = useState(categories.slice(0, ITEMS_PER_PAGE));
   const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: boolean }>({});
@@ -79,64 +85,76 @@ export default function FiltersPopUp() {
   const isMoreCategories = categoriesToShow.length < categories.length;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.pullBarThingy} />
-      <Text style={styles.h1}>Filters</Text>
-      <Text style={styles.h2}>Ingredients</Text>
-      <View style={styles.rowWrap}>
-        {ingredientsToShow.map(item => 
-          <Button
-            key={item.id}
-            title={item.name}
-            style={[
-              styles.button,
-              selectedIngredients[item.id] ? styles.selectedButton : null,
-            ]}
-            textStyle={{ fontSize: Sizes.l }}
-            onPress={() => setSelectedIngredients({ ...selectedIngredients, [item.id]: !selectedIngredients[item.id] })}
-          />
-        )}
+    <Modal 
+      isVisible={isVisible} 
+      onSwipeComplete={() => setIsVisible(false)}
+      swipeDirection="down"
+      style={{ width: '100%', margin: 0 }}
+      propagateSwipe
+    >
+      <View style={styles.container}>
+        <View style={styles.pullBarThingy} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+
+          <Text style={styles.h1}>Filters</Text>
+          <Text style={styles.h2}>Ingredients</Text>
+          <View style={styles.rowWrap}>
+            {ingredientsToShow.map(item => 
+              <Button
+                key={item.id}
+                title={item.name}
+                style={[
+                  styles.button,
+                  selectedIngredients[item.id] ? styles.selectedButton : null,
+                ]}
+                textStyle={{ fontSize: Sizes.l }}
+                onPress={() => setSelectedIngredients({ ...selectedIngredients, [item.id]: !selectedIngredients[item.id] })}
+              />
+            )}
+          </View>
+          {isMoreIngredients && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(ingredients, ingredientsToShow, setIngredientsToShow)} />}
+          <Text style={styles.h2}>Categories</Text>
+          <View style={styles.rowWrap}>
+            {categoriesToShow.map(item => 
+              <Button
+              key={item.id}
+              title={item.name}
+              style={[
+                styles.button,
+                selectedCategories[item.id] ? styles.selectedButton : null,
+              ]}
+              textStyle={{ fontSize: Sizes.l }}
+              onPress={() => setSelectedCategories({ ...selectedCategories, [item.id]: !selectedCategories[item.id] })}
+            />
+            )}
+          </View>
+          {isMoreCategories && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(categories, categoriesToShow, setCategoriesToShow)} />}
+          <Text style={styles.h2}>Calories</Text>
+          <View style={styles.rangeSection}>
+            <TextInput placeholder='Minimum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
+            <Text style={{ marginRight: Spacings.s }}>-</Text>
+            <TextInput placeholder='Maximum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
+          </View>
+          <Text style={styles.h2}>Time</Text>
+          <View style={styles.rangeSection}>
+            <TextInput placeholder='Minimum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <Text style={{ marginRight: Spacings.s }}>Mins</Text>
+            <Text style={{ marginRight: Spacings.s }}>-</Text>
+            <TextInput placeholder='Maximum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <Text style={{ marginRight: Spacings.s }}>Mins</Text>
+          </View>
+        </ScrollView>
       </View>
-      {isMoreIngredients && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(ingredients, ingredientsToShow, setIngredientsToShow)} />}
-      <Text style={styles.h2}>Categories</Text>
-      <View style={styles.rowWrap}>
-        {categoriesToShow.map(item => 
-          <Button
-          key={item.id}
-          title={item.name}
-          style={[
-            styles.button,
-            selectedCategories[item.id] ? styles.selectedButton : null,
-          ]}
-          textStyle={{ fontSize: Sizes.l }}
-          onPress={() => setSelectedCategories({ ...selectedCategories, [item.id]: !selectedCategories[item.id] })}
-        />
-        )}
-      </View>
-      {isMoreCategories && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(categories, categoriesToShow, setCategoriesToShow)} />}
-      <Text style={styles.h2}>Calories</Text>
-      <View style={styles.rangeSection}>
-        <TextInput placeholder='Minimum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
-        <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
-        <Text style={{ marginRight: Spacings.s }}>-</Text>
-        <TextInput placeholder='Maximum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
-        <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
-      </View>
-      <Text style={styles.h2}>Time</Text>
-      <View style={styles.rangeSection}>
-        <TextInput placeholder='Minimum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
-        <Text style={{ marginRight: Spacings.s }}>Mins</Text>
-        <Text style={{ marginRight: Spacings.s }}>-</Text>
-        <TextInput placeholder='Maximum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
-        <Text style={{ marginRight: Spacings.s }}>Mins</Text>
-      </View>
-    </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height: 696,
     backgroundColor: Colors.background,
     position: 'absolute',
     bottom: 0,

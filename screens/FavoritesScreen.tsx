@@ -4,7 +4,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useState } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
-import { RecipeCard, IconButton } from '@components';
+import { RecipeCard, IconButton, FiltersModal } from '@components';
 
 const recipes = [
   { 
@@ -38,15 +38,21 @@ const recipes = [
 ]
 
 interface HeaderComponentProps {
+  filtersModalState: {
+    isFiltersModalVisible?: boolean;
+    setIsFiltersModalVisible: (value: boolean) => void;
+  };
   filterActiveState: {
     isFilterActive: boolean;
     setIsFilterActive: (value: boolean) => void;
   };
+  navigation: NavigationProp<ParamListBase>;
 }
 
-function HeaderComponent({
-  filterActiveState: { isFilterActive, setIsFilterActive }
- }: HeaderComponentProps) {
+function HeaderComponent({ 
+  filtersModalState: { setIsFiltersModalVisible },
+  filterActiveState: { isFilterActive, setIsFilterActive }, 
+  navigation }: HeaderComponentProps) {
   const insets = useSafeAreaInsets()
 
   return (
@@ -66,8 +72,7 @@ function HeaderComponent({
               color={Colors.secondary} />
           )}
           style={[styles.filterIcon, { backgroundColor: isFilterActive ? Colors.secondary : Colors.onSecondary }]}
-          onPress={() => setIsFilterActive(!isFilterActive)}
-          />
+          onPress={() => setIsFiltersModalVisible(true)} />
       </View>
     </View>
   )
@@ -78,13 +83,17 @@ interface FavoritesScreenProps {
 }
 
 export default function FavoritesScreen({ navigation }: FavoritesScreenProps) {
+  const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const [isFilterActive, setIsFilterActive] = useState(false);
 
   return (
     <SafeAreaView edges={['left', 'right']}>
       <FlatList
         ListHeaderComponent={
-          <HeaderComponent filterActiveState={{ isFilterActive, setIsFilterActive }} />
+          <HeaderComponent 
+            filtersModalState={{ setIsFiltersModalVisible }}
+            filterActiveState={{ isFilterActive, setIsFilterActive }} 
+            navigation={navigation} />
         }
         data={recipes}
         numColumns={2}
@@ -94,6 +103,10 @@ export default function FavoritesScreen({ navigation }: FavoritesScreenProps) {
           <RecipeCard recipe={item} onPress={() => navigation.navigate('FS_Details')} />
         )}
         style={{ height: '100%' }} />
+      <FiltersModal
+        key={isFiltersModalVisible ? 'visible' : 'hidden'} 
+        isVisible={isFiltersModalVisible}
+        setIsVisible={setIsFiltersModalVisible} />
     </SafeAreaView>
   );
 };
