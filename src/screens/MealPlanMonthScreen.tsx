@@ -1,9 +1,9 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { useEffect, useRef } from 'react';
 import { Spacings, Sizes } from '@values';
 import { Calendar } from '@components';
-import { useEffect, useRef } from 'react';
 
 const mealPlans = [
   {

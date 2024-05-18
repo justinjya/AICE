@@ -1,11 +1,11 @@
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
 import { BottomNavBar, BOTTOM_NAV_BAR_HEIGHT } from '@components';
 import HomeStack from './HomeStack';
 import FavoritesStack from './FavoritesStack';
 import MealPlanStack from './MealPlanStack';
 import AccountStack from './AccountStack';
-import React from 'react';
 
 const Tab = createBottomTabNavigator();
 

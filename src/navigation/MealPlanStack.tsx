@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { MealPlanMonthScreen, MealPlanWeekScreen, RecipeDetailsScreen } from '@screens';
+import { MealPlanMonthScreen, MealPlanWeekScreen, RecipeDetailsScreen } from 'src/screens';
 
 const Stack = createNativeStackNavigator();
 const screenOptions = { headerShown: false };

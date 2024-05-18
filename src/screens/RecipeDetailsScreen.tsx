@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, Linking, TouchableOpacity } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
@@ -122,8 +122,10 @@ export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenP
   return(
     <SafeAreaView edges={['left', 'right']}>
       <ScrollView>
-        <Image source={{ uri: recipe.imageUrl }} style={{ height: 360 }} />
-        <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
+        <TouchableOpacity activeOpacity={0.9} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
+          <Image source={{ uri: recipe.imageUrl }} style={{ height: 360 }} />
+          <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
+        </TouchableOpacity>
         <IconButton
           icon={
             <Ionicons name="chevron-back" size={24} style={{ color: Colors.onPrimary }} />

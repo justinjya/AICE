@@ -1,8 +1,8 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { Colors, Sizes, Spacings } from "@values";
-import InputField from "./InputField";
-import IconButton from "./IconButton";
+import { Colors, Sizes, Spacings } from '@values';
+import InputField from './InputField';
+import IconButton from './IconButton';
 
 interface EditableFieldProps {
   title?: string;
@@ -47,7 +47,7 @@ export default function EditableField({
             <IconButton
               icon={
                 <Feather
-                  name="edit"
+                  name='edit'
                   size={20}
                   color={Colors.secondary}
                   style={{ marginRight: Spacings.l }}

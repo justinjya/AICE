@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginScreen, RegisterScreen } from '@screens';
+import { LoginScreen, RegisterScreen } from 'src/screens';
 
 const Stack = createNativeStackNavigator();
 const screenOptions = { headerShown: false };

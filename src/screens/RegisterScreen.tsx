@@ -1,10 +1,10 @@
 import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import React, { useState } from 'react';
 import { StatusBar } from "expo-status-bar";
 import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
-import React, { useState } from 'react';
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;
