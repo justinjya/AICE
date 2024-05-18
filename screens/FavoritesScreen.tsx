@@ -52,7 +52,7 @@ interface HeaderComponentProps {
 function HeaderComponent({ 
   filtersModalState: { setIsFiltersModalVisible },
   filterActiveState: { isFilterActive, setIsFilterActive }, 
-  navigation }: HeaderComponentProps) {
+  }: HeaderComponentProps) {
   const insets = useSafeAreaInsets()
 
   return (

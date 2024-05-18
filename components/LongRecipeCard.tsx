@@ -32,13 +32,13 @@ export default function LongRecipeCard({ recipe, onPress, onEllipsisPress }: Car
         <View style={styles.detailsContainer}>
           <SimpleLineIcons 
             name='fire'
-            size={Sizes.m}
+            size={Sizes.s}
             color={Colors.primary}
             style={{ marginRight: Spacings.xxs }} />
           <Text style={[styles.smallCardTextDetails, { marginRight: Spacings.xxs }]}>{recipe.calories} kcal</Text>
           <SimpleLineIcons
             name='clock'
-            size={Sizes.m}
+            size={Sizes.s}
             color={Colors.primary}
             style={{ marginRight: Spacings.xxs }} />
           <Text style={styles.smallCardTextDetails}>{recipe.duration} mins</Text>

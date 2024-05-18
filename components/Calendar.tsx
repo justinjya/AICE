@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useEffect, useRef } from 'react';
 import { Colors, Spacings, Sizes } from '@values';
 
@@ -100,6 +100,8 @@ export default function Calendar({ mealPlans, onPress }: CalendarProps) {
   );
 };
 
+const screenWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
   daysContainer: {
     flexDirection: 'row',
@@ -123,20 +125,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   day: {
-    width: 45.2,
-    height: 45.2,
+    width: screenWidth / 7 - 10,
+    height: screenWidth / 7 - 10,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacings.s,
   },
   dayText: {
-    fontSize: Sizes.h2,
-    marginBottom: Spacings.xxxs,
+    fontSize: Sizes.h3,
+    marginBottom: Spacings.xxs,
   },
   dot: {
-    width: 4,
-    height: 4,
+    width: 5,
+    height: 5,
     backgroundColor: Colors.primary,
     borderRadius: 50
   },

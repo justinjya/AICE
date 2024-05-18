@@ -164,10 +164,9 @@ const styles = StyleSheet.create({
     padding: 2
   },
   cardsContainer: {
-    flexDirection: 'row',
+    width: '100%',
     justifyContent: 'space-between',
-    flexWrap: 'wrap',
     paddingHorizontal: Spacings.m,
-    marginBottom: Spacings.m
+    marginBottom: Spacings.m,
   },
 });

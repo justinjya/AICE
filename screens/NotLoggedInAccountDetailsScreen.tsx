@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors, Sizes, Spacings } from "@values";
 import { Button } from '@components';
@@ -12,7 +12,7 @@ export default function NotLoggedInAccountDetailsScreen({ navigation }: NotLogge
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Account Details</Text>
-      <Text style={[styles.text, { width: '80%', marginBottom: Spacings.m }]}>You are currently not signed into any account.</Text>
+      <Text style={[styles.text, { width: '80%', marginBottom: Spacings.l }]}>You are currently not signed into any account.</Text>
       <Button
         title='Create an account'
         style={{ marginBottom: Spacings.xs }}

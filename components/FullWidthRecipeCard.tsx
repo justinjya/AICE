@@ -24,18 +24,17 @@ export default function FullWidthRecipeCard({ recipe, onPress }: CardProps) {
         source={{ uri: recipe.imageUrl }}
         style={[styles.background, { width: screenWidth, height: 274 }]} />
       <LinearGradient
-        colors={['rgba(0,0,0,0.25)', 'transparent', 'transparent', 'rgba(0,0,0,0.7)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.8)']}
+        colors={['rgba(0,0,0,0.25)', 'transparent', 'transparent', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,1)']}
         style={[styles.background, { width: screenWidth, height: 274 }]}
       />
-      {/* <IconButton
+      <IconButton
         icon={
           <AntDesign
             name='ellipsis1'
-            size={23}
+            size={Sizes.h1}
             color={Colors.onPrimary}
             style={{ alignSelf: 'flex-end', margin: Spacings.s_m }} />
-        }
-      /> */}
+        } />
       <View style={styles.textContainer}>
         <View style={styles.detailsContainer}>
           <SimpleLineIcons 

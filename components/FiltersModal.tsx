@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, View, Text, TextInput } from "react-native";
+import { StyleSheet, ScrollView, View, Text, TextInput, Dimensions } from "react-native";
 import React, { useState } from 'react';
 import { Colors, Sizes, Spacings } from '@values';
 import Modal from 'react-native-modal';
@@ -151,6 +151,8 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
   );
 }
 
+const screenWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacings.s
   },
   button: {
-    width: 111,
+    width: screenWidth / 3 - Spacings.l,
     height: 28,
     backgroundColor: Colors.gray_100,
     borderRadius: 10,

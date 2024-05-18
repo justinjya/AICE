@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: Colors.gray_100,
     flexDirection: 'row',
-    paddingHorizontal: Spacings.m,
+    paddingHorizontal: Spacings.s,
     paddingVertical: Spacings.s
   },
   dot: {

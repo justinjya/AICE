@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Platform, StatusBar as StatusBarAPI } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useState } from 'react';
