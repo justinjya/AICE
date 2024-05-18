@@ -1,13 +1,14 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NotLoggedInAccountDetailsScreen } from '@screens';
+import { LoginScreen, RegisterScreen } from '@screens';
 
 const Stack = createNativeStackNavigator();
 const screenOptions = { headerShown: false };
 
-export default function AccountStack() {
+export default function AuthenticationStack() {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="AS_NotLoggedInAccountDetails" component={NotLoggedInAccountDetailsScreen} />
+      <Stack.Screen name="AU_Login" component={LoginScreen} />
+      <Stack.Screen name="AU_Register" component={RegisterScreen} />
     </Stack.Navigator>
   );
 };

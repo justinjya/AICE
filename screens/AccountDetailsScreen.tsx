@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Sizes.h1,
-    marginBottom: Spacings.xxl,
+    marginBottom: Spacings.l,
   },
   detailsContainer: {
     flexDirection: 'column',

@@ -63,10 +63,12 @@ export default function BottomNavBar({ state, descriptors, navigation }: BottomN
   );
 }
 
+export const BOTTOM_NAV_BAR_HEIGHT = 96;
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 96,
+    height: BOTTOM_NAV_BAR_HEIGHT,
     position: 'absolute',
     flexDirection: 'row',
     bottom: 0,

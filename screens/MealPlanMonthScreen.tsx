@@ -1,8 +1,9 @@
-import { StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Spacings, Sizes } from '@values';
 import { Calendar } from '@components';
+import { useEffect, useRef } from 'react';
 
 const mealPlans = [
   {
@@ -72,10 +73,27 @@ interface MealPlanMonthProps {
 }
 
 export default function MealPlanMonthScreen({ navigation }: MealPlanMonthProps) {
+  const months = Array.from({ length: 12 }, (_, i) => i);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const currentMonth = new Date().getMonth();
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollTo({ x: 0, y: currentMonth * 363, animated: false }); // Assuming each month takes up 363px
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <Text style={styles.title}>Meal Plan</Text>
-      <Calendar mealPlans={mealPlans} onPress={() => navigation.navigate('MS_MealPlanWeek')} />
+      <ScrollView ref={scrollViewRef}>
+        {months.map((month) => (
+          <Calendar
+            mealPlans={mealPlans}
+            key={month}
+            year={2024}
+            month={month}
+            onPress={() => navigation.navigate('MS_MealPlanWeek')} />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -84,9 +102,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: Spacings.m,
+    marginBottom: -Spacings.m
   },
   title: {
     fontSize: Sizes.h1,
-    marginBottom: Spacings.xxl,
+    marginBottom: Spacings.l,
   }
 });

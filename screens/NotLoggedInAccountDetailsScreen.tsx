@@ -17,12 +17,12 @@ export default function NotLoggedInAccountDetailsScreen({ navigation }: NotLogge
         title='Create an account'
         style={{ marginBottom: Spacings.xs }}
         textStyle={[styles.text, { textDecorationLine: 'underline' }]}
-        onPress={() => navigation.navigate('AS_Register')}
+        onPress={() => navigation.navigate('Register')}
       />
       <Button
         title='Login to an existing account'
         textStyle={[styles.text, { textDecorationLine: 'underline' }]}
-        onPress={() => navigation.navigate('AS_Login')}
+        onPress={() => navigation.navigate('Login')}
       />
     </SafeAreaView>
   );
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Sizes.h1,
-    marginBottom: Spacings.xxl,
+    marginBottom: Spacings.l,
   },
   detailsContainer: {
     flexDirection: 'column',

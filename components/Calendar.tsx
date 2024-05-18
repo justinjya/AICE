@@ -1,5 +1,4 @@
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { Colors, Spacings, Sizes } from '@values';
 
 interface CalendarMonthProps {
@@ -9,16 +8,11 @@ interface CalendarMonthProps {
   onPress?: () => void;
 };
 
-interface CalendarProps {
-  mealPlans: Array<any>;
-  onPress?: () => void;
-};
-
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
-function CalendarMonth({ mealPlans, year, month, onPress }: CalendarMonthProps) {
+export default function Calendar({ mealPlans, year, month, onPress }: CalendarMonthProps) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   
@@ -77,30 +71,8 @@ function CalendarMonth({ mealPlans, year, month, onPress }: CalendarMonthProps) 
   );
 };
 
-export default function Calendar({ mealPlans, onPress }: CalendarProps) {
-  const months = Array.from({ length: 12 }, (_, i) => i);
-  const scrollViewRef = useRef<ScrollView>(null);
-  const currentMonth = new Date().getMonth();
-
-  useEffect(() => {
-    scrollViewRef.current?.scrollTo({ x: 0, y: currentMonth * 363, animated: false }); // Assuming each month takes up 363px
-  }, []);
-
-  return (
-    <ScrollView ref={scrollViewRef}>
-      {months.map((month) => (
-        <CalendarMonth 
-          mealPlans={mealPlans}
-          key={month}
-          year={2024}
-          month={month}
-          onPress={onPress} />
-      ))}
-    </ScrollView>
-  );
-};
-
 const screenWidth = Dimensions.get('window').width;
+const magicSpacing = 11; // it just works hahaha
 
 const styles = StyleSheet.create({
   daysContainer: {
@@ -125,8 +97,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   day: {
-    width: screenWidth / 7 - 10,
-    height: screenWidth / 7 - 10,
+    width: screenWidth / 7 - magicSpacing,
+    height: screenWidth / 7 - magicSpacing,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,19 +1,17 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeStack from './HomeStack';
-import FavoritesStack from './FavoritesStack';
-import MealPlanStack from './MealPlanStack';
-import AccountStack from './AccountStack';
-import BottomNavBar from 'components/BottomNavBar';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LoginScreen, RegisterScreen } from '@screens';
+import TabNavigator from './TabNavigator';
+import React from 'react';
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+const screenOptions = { headerShown: false };
 
 export default function RootNavigator() {
   return (
-    <Tab.Navigator tabBar={props => <BottomNavBar {...props} />} screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Favorites" component={FavoritesStack} />
-      <Tab.Screen name="MealPlan" component={MealPlanStack} />
-      <Tab.Screen name="Account" component={AccountStack} />
-    </Tab.Navigator>
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name="Main" component={TabNavigator} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+    </Stack.Navigator>
   );
 };

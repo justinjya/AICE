@@ -10,3 +10,6 @@ export { default as LongRecipeCard } from './LongRecipeCard';
 export { default as Pagination } from './Pagination';
 export { default as RecipeCard } from './RecipeCard';
 export { default as RecipeDetailsModal } from './RecipeDetailsModal';
+
+// Consts
+export { BOTTOM_NAV_BAR_HEIGHT } from './BottomNavBar';
