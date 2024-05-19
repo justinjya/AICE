@@ -1,20 +1,27 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, AppState } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useState } from 'react';
-import { StatusBar } from "expo-status-bar";
 import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
+import { supabase, signInWithEmail } from "@utils";
 
 interface LoginScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
+
 export default function LoginScreen({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isPasswordFalse, setIsPasswordFalse] = useState(false);
-  const [isEmailFalse, setIsEmailFalse] = useState(false);
+  const [isCredentialsFalse, setIsCredentialsFalse] = useState(false);
 
   const isEmailValid = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -23,18 +30,12 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
   
   const isButtonDisabled = !email || !isEmailValid(email) || password.length < 5;
   
-  const handleLogin = () => {
-    if (email !== 'anjaniibrahimm@gmail.com') {
-      setIsEmailFalse(true);
-    } else {
-      setIsEmailFalse(false);
-    }
-
-    if (password !== 'anjani') {
-      setIsPasswordFalse(true);
-    } else {
-      setIsPasswordFalse(false);
-      console.log('Login');
+  const handleLogin = async () => {
+    try {
+      await signInWithEmail(email, password)
+      navigation.navigate('AS_AccountDetails');
+    } catch (error) {
+      setIsCredentialsFalse(true);
     }
   };
 
@@ -50,23 +51,22 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
         placeholder='Email' 
         inputProps={{ inputText: email, setInputText: setEmail }} 
         style={{ marginBottom: Spacings.m }}
-        isError={isEmailFalse}
-        errorMessage={isEmailFalse ? "Email is invalid" : ""} />
+        isError={isCredentialsFalse}
+        errorMessage={"Invalid credentials"} />
       <InputField
         title='Password'
         placeholder='Password' 
         inputProps={{ inputText: password, setInputText: setPassword }} 
         style={{ marginBottom: Spacings.xl }}
-        isError={isPasswordFalse}
-        errorMessage={isPasswordFalse ? "Password is invalid" : ""}
+        isError={isCredentialsFalse}
+        errorMessage={"Invalid credentials"}
         password={true} />
       <Button
         title='Login'
-        style={styles.loginButton}
+        style={[styles.loginButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
         textStyle={styles.loginText}
         onPress={handleLogin}
         disabled={isButtonDisabled} />
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }

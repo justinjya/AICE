@@ -1,10 +1,10 @@
 import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import React, { useState } from 'react';
-import { StatusBar } from "expo-status-bar";
+import React, { useState, useContext } from 'react';
 import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
+import { AuthContext, signUpWithEmail } from "@utils";
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -14,11 +14,21 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSignUpFailed, setIsSignUpFailed] = useState(false);
 
   const isEmailValid = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   };
+
+  const handleRegister = async () => {
+    try {
+      signUpWithEmail(name, email, password);
+      navigation.goBack();
+    } catch (error) {
+      setIsSignUpFailed(true);
+    }
+  }
 
   const isButtonDisabled = !name || !isEmailValid(email) || password.length < 5;
 
@@ -39,7 +49,9 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
         title='Email'
         placeholder='Email' 
         inputProps={{ inputText: email, setInputText: setEmail }} 
-        style={{ marginBottom: Spacings.m }} />
+        style={{ marginBottom: Spacings.m }}
+        isError={isSignUpFailed}
+        errorMessage='Email is already in use' />
       <InputField
         title='Password'
         placeholder='Password' 
@@ -50,9 +62,8 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
         title='Create Account'
         style={[styles.createAccountButton, { opacity: isButtonDisabled ? 0.5 : 1 }]}
         textStyle={styles.createAccountButtonText}
-        onPress={() => {console.log('Create Account')}}
+        onPress={handleRegister}
         disabled={isButtonDisabled} />
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }

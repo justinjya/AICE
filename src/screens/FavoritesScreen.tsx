@@ -1,10 +1,11 @@
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useState } from 'react';
+import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
 import { RecipeCard, IconButton, FiltersModal } from '@components';
+import { AuthContext, fetchFavoriteRecipes } from '@utils';
 
 const recipes = [
   { 
@@ -111,8 +112,30 @@ interface FavoritesScreenProps {
 }
 
 export default function FavoritesScreen({ navigation }: FavoritesScreenProps) {
+  const { session } = useContext(AuthContext);
+  const [recipes, setRecipes] = useState<any>([]);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const [isFilterActive, setIsFilterActive] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      const getFavoriteRecipes = async () => {
+        try {
+          if (session === null) {
+            setRecipes([]);
+            return;
+          };
+
+          const fetchedRecipes = await fetchFavoriteRecipes(session.user.id);
+          setRecipes(fetchedRecipes);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      getFavoriteRecipes();
+    }, [session])
+  );
 
   return (
     <SafeAreaView edges={['left', 'right']}>
@@ -125,11 +148,14 @@ export default function FavoritesScreen({ navigation }: FavoritesScreenProps) {
         }
         data={recipes}
         numColumns={2}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.Recipe.id.toString()}
         columnWrapperStyle={styles.cardsContainer}
         renderItem={({ item }: any) => (
-          <RecipeCard recipe={item} onPress={() => navigation.navigate('FS_Details')} />
+          <RecipeCard recipe={item.Recipe} onPress={() => navigation.navigate('FS_Details', { recipeId: item.Recipe.id })} />
         )}
+        ListEmptyComponent={
+          <ListEmptyComponent />
+        }
         style={{ height: '100%' }} />
       <FiltersModal
         key={isFiltersModalVisible ? 'visible' : 'hidden'} 
@@ -138,6 +164,16 @@ export default function FavoritesScreen({ navigation }: FavoritesScreenProps) {
     </SafeAreaView>
   );
 };
+
+function ListEmptyComponent() {
+  return (
+    <View style={styles.listEmptyContainer}>
+      <Text style={styles.listEmptyText}>
+        You haven't added any recipes to your favorites yet. Start exploring and save your favorite ones!
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -174,4 +210,15 @@ const styles = StyleSheet.create({
     fontSize: Sizes.h2,
     textAlignVertical: 'bottom'
   },
+  listEmptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  listEmptyText: {
+    color: Colors.text_dark,
+    fontSize: Sizes.l,
+    width: '80%',
+    textAlign: 'center'
+  }
 });

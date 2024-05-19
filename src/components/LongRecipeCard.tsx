@@ -13,10 +13,9 @@ interface CardProps {
     imageUrl: string,
   };
   onPress?: () => void;
-  onEllipsisPress?: () => void;
 };
 
-export default function LongRecipeCard({ recipe, onPress, onEllipsisPress }: CardProps) {
+export default function LongRecipeCard({ recipe, onPress }: CardProps) {
   return (
     <TouchableOpacity style={styles.cardContainer} activeOpacity={0.8} onPress={onPress}>
       <Image
@@ -51,8 +50,7 @@ export default function LongRecipeCard({ recipe, onPress, onEllipsisPress }: Car
             size={23}
             color={Colors.onPrimary}
             style={{ paddingRight: Spacings.m }} />
-        }
-        onPress={onEllipsisPress} />
+        } />
     </TouchableOpacity>
   )
 }

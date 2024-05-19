@@ -1,18 +1,19 @@
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Colors, Spacings, Sizes } from '@values';
 
 interface CalendarMonthProps {
   mealPlans: Array<any>;
   year: number;
   month: number;
-  onPress?: () => void;
 };
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
-export default function Calendar({ mealPlans, year, month, onPress }: CalendarMonthProps) {
+export default function Calendar({ mealPlans, year, month }: CalendarMonthProps) {
+  const navigation: NavigationProp<ParamListBase> = useNavigation();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   
@@ -54,7 +55,7 @@ export default function Calendar({ mealPlans, year, month, onPress }: CalendarMo
             <TouchableOpacity
               key={index}
               style={[styles.day, day !== null ? { backgroundColor: Colors.gray_100 } : { backgroundColor: 'transparent' }]}
-              onPress={onPress}
+              onPress={() => navigation.navigate('MS_MealPlanWeek', { year: year, month: month, day: day })}
             >
               <Text style={day !== null ? styles.dayText : {}}>{day}</Text>
               {isPlanned ? 

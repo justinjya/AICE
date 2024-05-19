@@ -90,8 +90,7 @@ export default function MealPlanMonthScreen({ navigation }: MealPlanMonthProps) 
             mealPlans={mealPlans}
             key={month}
             year={2024}
-            month={month}
-            onPress={() => navigation.navigate('MS_MealPlanWeek')} />
+            month={month} />
         ))}
       </ScrollView>
     </SafeAreaView>

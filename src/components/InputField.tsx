@@ -48,6 +48,8 @@ export default function InputField({
           value={inputProps.inputText}
           onChangeText={inputProps.setInputText}
           secureTextEntry={password}
+          autoCorrect={false}
+          autoCapitalize='none'
         />
         {inputProps.inputText ? (
           <TouchableOpacity onPress={() => inputProps.setInputText('')}>

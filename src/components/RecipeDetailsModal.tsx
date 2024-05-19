@@ -1,23 +1,61 @@
-import { StyleSheet, View } from "react-native";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useState } from 'react';
+import { StyleSheet, View, Alert } from "react-native";
+import { NavigationProp, ParamListBase, useFocusEffect } from "@react-navigation/native";
+import { useCallback, useContext, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Sizes, Spacings } from '@values';
+import { AuthContext, checkIfFavorite, addFavorite, removeFavorite } from '@utils';
 import Button from './Button';
 import Modal from 'react-native-modal';
 
 interface RecipeDetailsPopUpProps {
+  recipeId: number;
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   navigation?: NavigationProp<ParamListBase>
 }
 
-export default function RecipeDetailsModal({ isVisible, setIsVisible, navigation }: RecipeDetailsPopUpProps) {
+export default function RecipeDetailsModal({ recipeId, isVisible, setIsVisible, navigation }: RecipeDetailsPopUpProps) {
+  const { session } =  useContext(AuthContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInMealPlan, setIsInMealPlan] = useState(false);
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchData() {
+        if (session) {
+          await checkIfFavorite(recipeId, session.user.id).then((result) => {
+            setIsFavorite(result);
+          });
+  
+          // TODO: Check if the recipe is in the user's meal plan
+        } else {
+          setIsFavorite(false);
+          setIsInMealPlan(false);
+        };
+      };
+  
+      fetchData();
+    }, [session, recipeId])
+  );
+
+  const handleFavoritePress = async () => {
+    if (session === null) {
+      Alert.alert('You must be logged in to add a recipe to your favorites.');
+      return;
+    }
+
+    try {
+      if (!isFavorite) {
+        await addFavorite(recipeId, session.user.id);
+        setIsFavorite(true);
+      }
+      else if (isFavorite) {
+        await removeFavorite(recipeId, session.user.id);
+        setIsFavorite(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const toggleMealPlan = () => {
@@ -45,7 +83,7 @@ export default function RecipeDetailsModal({ isVisible, setIsVisible, navigation
               color={isFavorite ? Colors.error : Colors.text_dark }
             />
           }
-          onPress={toggleFavorite}
+          onPress={handleFavoritePress}
           style={[styles.button, { marginBottom: Spacings.s }]}
           textStyle={[styles.buttonText, { color: isFavorite ? Colors.error : Colors.text_dark }]}
         />

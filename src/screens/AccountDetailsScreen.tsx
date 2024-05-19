@@ -1,29 +1,30 @@
 import { Text, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from 'react';
-import { StatusBar } from "expo-status-bar";
+import { useContext, useState } from 'react';
 import { Colors, Sizes, Spacings } from "@values";
 import { Button, EditableField } from '@components';
+import { AuthContext, updateUser, signOut } from '@utils'
 
 export default function AccountDetailsScreen() {
-  const isEmailValid = (email: string) => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(email);
-  };
-
-  const [name, setName] = useState('John Doe');
-  const [tempName, setTempName] = useState(name);
+  const { session, name, setName } = useContext(AuthContext);
+  const [tempName, setTempName] = useState(name as string);
   const [isEditingName, setIsEditingName] = useState(false);
+  const isEditingAnyField = isEditingName;
 
-  const [email, setEmail] = useState('john.doe@example.com');
-  const [tempEmail, setTempEmail] = useState(email);
-  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const handleCancel = () => {
+    setTempName(name as string);
+    setIsEditingName(false);
+  }
 
-  const [password, setPassword] = useState('password');
-  const [tempPassword, setTempPassword] = useState(password);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const handleSave = async () => {
+    if (session === null) return;
 
-  const isEditingAnyField = isEditingName || isEditingEmail || isEditingPassword;
+    setName(tempName);
+    await updateUser(session, tempName);
+    setIsEditingName(false);
+  }
+
+  const handleSignOut = async () => signOut();
   
   return (
     <SafeAreaView style={styles.container}>
@@ -31,7 +32,7 @@ export default function AccountDetailsScreen() {
       <View style={styles.detailsContainer}>
         <EditableField
           title="Name"
-          attribute={name}
+          attribute={name as string}
           isEditingProps={{ isEditing: isEditingName, setIsEditing: setIsEditingName }}
           tempValueProps={{ tempValue: tempName, setTempValue: setTempName }}
           style={{ marginBottom: Spacings.l }}
@@ -39,20 +40,10 @@ export default function AccountDetailsScreen() {
         />
         <EditableField
           title="Email"
-          attribute={email}
-          isEditingProps={{ isEditing: isEditingEmail, setIsEditing: setIsEditingEmail }}
-          tempValueProps={{ tempValue: tempEmail, setTempValue: setTempEmail }}
+          attribute={session?.user.email as string}
           style={{ marginBottom: Spacings.l }}
           inputFieldStyle={{ marginBottom: Spacings.m_s }}
-        />
-        <EditableField
-          title="Password"
-          attribute={password}
-          password={true}
-          isEditingProps={{ isEditing: isEditingPassword, setIsEditing: setIsEditingPassword }}
-          tempValueProps={{ tempValue: tempPassword, setTempValue: setTempPassword }}
-          style={{ marginBottom: Spacings.l }}
-          inputFieldStyle={{ marginBottom: Spacings.m_s }}
+          disabled={true}
         />
       </View>
       {isEditingAnyField ? (
@@ -61,37 +52,20 @@ export default function AccountDetailsScreen() {
             title='Cancel'
             style={[styles.button, { opacity: 0.5, marginRight: Spacings.s }]}
             textStyle={styles.buttonText}
-            onPress={() => {
-              setTempName(name);
-              setTempEmail(email);
-              setTempPassword(password);
-              setIsEditingName(false);
-              setIsEditingEmail(false);
-              setIsEditingPassword(false);
-            }}
-          />
+            onPress={handleCancel} />
           <Button
             title='Save'
             style={styles.button}
             textStyle={styles.buttonText}
-            onPress={() => {
-              setName(tempName);
-              setEmail(tempEmail);
-              setPassword(tempPassword);
-              setIsEditingName(false);
-              setIsEditingEmail(false);
-              setIsEditingPassword(false);
-            }}
-          />
+            onPress={handleSave} />
         </View>
       ) : (
         <Button
           title='Logout'
           style={styles.button}
           textStyle={styles.buttonText}
-        />
+          onPress={handleSignOut} />
       )}
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 };

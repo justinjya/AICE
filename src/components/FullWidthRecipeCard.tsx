@@ -1,8 +1,7 @@
 import { View, StyleSheet, Text, Image, Pressable, Dimensions } from 'react-native';
-import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Spacings, Sizes } from '@values';
-import IconButton from './IconButton';
 
 interface CardProps {
   recipe: {
@@ -24,17 +23,11 @@ export default function FullWidthRecipeCard({ recipe, onPress }: CardProps) {
         source={{ uri: recipe.imageUrl }}
         style={[styles.background, { width: screenWidth, height: 274 }]} />
       <LinearGradient
-        colors={['rgba(0,0,0,0.25)', 'transparent', 'transparent', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,1)']}
+        colors={['rgba(0,0,0,0.15)', 'transparent', 'transparent', 'rgba(0,0,0,0.55)', 'rgba(0,0,0,0.9)', 'rgba(0,0,0,1)']}
         style={[styles.background, { width: screenWidth, height: 274 }]}
+        start={{ x: 0.3, y: -0.1 }}
+        end={{ x: 0, y: 1 }}
       />
-      <IconButton
-        icon={
-          <AntDesign
-            name='ellipsis1'
-            size={Sizes.h1}
-            color={Colors.onPrimary}
-            style={{ alignSelf: 'flex-end', margin: Spacings.s_m }} />
-        } />
       <View style={styles.textContainer}>
         <View style={styles.detailsContainer}>
           <SimpleLineIcons 

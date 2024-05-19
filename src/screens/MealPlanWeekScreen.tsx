@@ -1,10 +1,10 @@
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
-import { LongRecipeCard, IconButton, RecipeDetailsModal } from '@components';
+import { LongRecipeCard, IconButton } from '@components';
 
 const mealPlans = [
   {
@@ -70,7 +70,7 @@ const mealPlans = [
 ];
 
 interface WeekHeaderProps {
-  selectedDay: Date | null;
+  selectedDay: Date;
   setSelectedDay: (date: Date) => void;
 }
 
@@ -82,11 +82,15 @@ const isDateEqual = (date1: Date, date2: Date) =>
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function WeekHeader({ selectedDay, setSelectedDay }: WeekHeaderProps) {
-  const [startOfWeek, setStartOfWeek] = useState(() => {
-    const now = new Date();
-    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-    return startOfWeek;
-  });
+  const [startOfWeek, setStartOfWeek] = useState(new Date());
+
+  useEffect(() => {
+    const start = new Date(selectedDay);
+    const dayOfWeek = start.getDay();
+    const diff = dayOfWeek === 0 ? 6 : dayOfWeek;
+    start.setDate(start.getDate() - diff);
+    setStartOfWeek(start);
+  }, [selectedDay]);
 
   const changeWeek = (direction: number) => {
     setStartOfWeek(prevStartOfWeek => {
@@ -141,10 +145,9 @@ interface MealSectionProps {
   date?: Date;
   onCardPress?: () => void;
   onAddPress?: () => void;
-  onCardEllipsisPress?: () => void;
 };
 
-function MealsSection({ array, schedule, date, onCardPress, onAddPress, onCardEllipsisPress }: MealSectionProps) {
+function MealsSection({ array, schedule, date, onCardPress, onAddPress }: MealSectionProps) {
   const meals = array.filter(meal => 
     meal.schedule === schedule && 
     meal.date instanceof Date && 
@@ -174,8 +177,7 @@ function MealsSection({ array, schedule, date, onCardPress, onAddPress, onCardEl
             <LongRecipeCard
               key={recipe.id}
               recipe={recipe}
-              onPress={onCardPress}
-              onEllipsisPress={onCardEllipsisPress} />
+              onPress={onCardPress} />
           </View>
         ))
       )}
@@ -185,15 +187,12 @@ function MealsSection({ array, schedule, date, onCardPress, onAddPress, onCardEl
 
 interface MealPlanWeekScreenProps {
   navigation: NavigationProp<ParamListBase>;
+  route: any;
 }
 
-export default function MealPlanWeekScreen({ navigation }: MealPlanWeekScreenProps) {
-  const [selectedDay, setSelectedDay] = useState(new Date() as Date);
-  const [isRecipeDetailsModalVisible, setIsRecipeDetailsModalVisible] = useState(false);
-
-  const toggleRecipeDetailsModal = () => {
-    setIsRecipeDetailsModalVisible(!isRecipeDetailsModalVisible);
-  }
+export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekScreenProps) {
+  const { year, month, day } = route.params
+  const [selectedDay, setSelectedDay] = useState(new Date(year, month, day) as Date);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -221,21 +220,17 @@ export default function MealPlanWeekScreen({ navigation }: MealPlanWeekScreenPro
         array={mealPlans} 
         schedule='Breakfast' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')}
-        onCardEllipsisPress={toggleRecipeDetailsModal} />
+        onCardPress={() => navigation.navigate('MS_Details')} />
       <MealsSection 
         array={mealPlans} 
         schedule='Lunch' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')}
-        onCardEllipsisPress={toggleRecipeDetailsModal} />
+        onCardPress={() => navigation.navigate('MS_Details')} />
       <MealsSection 
         array={mealPlans} 
         schedule='Dinner' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')}
-        onCardEllipsisPress={toggleRecipeDetailsModal} />
-      <RecipeDetailsModal isVisible={isRecipeDetailsModalVisible} setIsVisible={setIsRecipeDetailsModalVisible} />
+        onCardPress={() => navigation.navigate('MS_Details')} />
     </SafeAreaView>
   )
 }

@@ -1,125 +1,53 @@
 import { StyleSheet, View, Text, Image, ScrollView, Linking, TouchableOpacity } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
 import { SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Spacings, Sizes, Colors } from "@values";
 import { Button, IconButton, RecipeDetailsModal } from "@components";
-
-const recipe = { 
-  id: 1,
-  name: 'Breakfast Hash',
-  calories: 350,
-  duration: 45,
-  ingredients: [
-    {
-      id: 1,
-      name: 'olive oil',
-      measurement: '2 tbsp'
-    },
-    {
-      id: 2,
-      name: 'onion',
-      measurement: '1, diced'
-    },
-    {
-      id: 3,
-      name: 'garlic',
-      measurement: '2 cloves, minced'
-    },
-    {
-      id: 4,
-      name: 'bell peppers',
-      measurement: '2, diced'
-    },
-    {
-      id: 5,
-      name: 'potatoes',
-      measurement: '2, diced'
-    },
-    {
-      id: 6,
-      name: 'paprika',
-      measurement: '1 tsp'
-    },
-    {
-      id: 7,
-      name: 'cumin',
-      measurement: '1 tsp'
-    },
-    {
-      id: 8,
-      name: 'chili powder',
-      measurement: '1/2 tsp'
-    },
-    {
-      id: 9,
-      name: 'salt',
-      measurement: '1/2 tsp'
-    },
-    {
-      id: 10,
-      name: 'pepper',
-      measurement: '1/4 tsp'
-    },
-    {
-      id: 11,
-      name: 'eggs',
-      measurement: '4'
-    },
-    {
-      id: 12,
-      name: 'parsley',
-      measurement: '1 tbsp, chopped'
-    }
-  ],
-  instructions: [
-    {
-      id: 1,
-      step: 'Heat olive oil in a large skillet over medium heat.'
-    },
-    {
-      id: 2,
-      step: 'Add onion and garlic and cook until soft, about 5 minutes.'
-    },
-    {
-      id: 3,
-      step: 'Add bell peppers and potatoes and cook until potatoes are golden brown, about 15 minutes.'
-    },
-    {
-      id: 4,
-      step: 'Add paprika, cumin, chili powder, salt, and pepper and stir to combine.'
-    },
-    {
-      id: 5,
-      step: 'Make 4 wells in the hash and crack an egg into each well.'
-    },
-    {
-      id: 6,
-      step: 'Cover and cook until eggs are cooked to your liking, about 5 minutes for runny yolks.'
-    },
-    {
-      id: 7,
-      step: 'Garnish with parsley and serve.'
-    }
-  ],
-  imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
-}
+import { fetchRecipeDetails } from "@utils";
 
 interface RecipeDetailsScreenProps {
   navigation: NavigationProp<ParamListBase>
+  route: any,
 }
 
-export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenProps) {
+export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetailsScreenProps) {
   const insets = useSafeAreaInsets();
-  const [isRecipeDetailsModalVisible, setIsRecipeDetailsModalVisible] = useState(false);
+  const { recipeId } = route.params;
+
+  const [recipe, setRecipe] = useState<any | undefined>()
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
 
   const toggleRecipeDetailsModal = () => {
-    setIsRecipeDetailsModalVisible(!isRecipeDetailsModalVisible);
-  }
+    setIsDetailsModalVisible(!isDetailsModalVisible);
+  };
 
-  return(
+  useFocusEffect(
+    useCallback(() => {
+      const getRecipeDetails = async () => {
+        try {
+          setIsLoading(true);
+          const fetchedRecipeDetails = await fetchRecipeDetails(recipeId);
+          setRecipe(fetchedRecipeDetails);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+
+      getRecipeDetails();
+    }, [recipeId])
+  );
+
+  if (isLoading) {
+    return;
+  };
+
+  return (
     <SafeAreaView edges={['left', 'right']}>
       <ScrollView>
         <TouchableOpacity activeOpacity={0.9} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
@@ -134,7 +62,7 @@ export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenP
           onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.title}>Classic Lasagne</Text>
+            <Text style={styles.title}>{recipe.name}</Text>
             <IconButton
               icon={
                 <Entypo name="dots-three-horizontal" size={20} style={{ marginTop: Spacings.m, color: Colors.onBackground}} />
@@ -143,38 +71,42 @@ export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenP
           </View>
           <View style={styles.recipeNutritionContainer}>
             <SimpleLineIcons name="fire" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
-            <Text style={[styles.recipeNutritionText, { marginRight: Spacings.m }]}>500 kcal</Text>
+            <Text style={[styles.recipeNutritionText, { marginRight: Spacings.m }]}>{recipe.calories} kcal</Text>
             <SimpleLineIcons name="clock" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
-            <Text style={styles.recipeNutritionText}>1 hr and 40 mins</Text>
+            <Text style={styles.recipeNutritionText}>{recipe.duration} mins</Text>
           </View>
-          <Button
-            title='Make it vegan!'
-            style={[styles.veganButton, { marginBottom: Spacings.m }]}
-            textStyle={styles.veganButtonText}
-            rightIcon={<Entypo name="leaf" size={20} color={Colors.onPrimary} />}
-            onPress={() => {}} />
-        </View>
-        <View style={[styles.listContainer, { marginBottom: Spacings.m }]}>
-          <Text style={styles.listTitle}>Ingredients</Text>
-          {recipe.ingredients.map((ingredient) => (
-            <View key={ingredient.id} style={styles.itemContainer}>
-              <View style={styles.dot} />
-              <Text style={styles.listItemText}>{ingredient.name} {ingredient.measurement}</Text>
-            </View> 
-          ))}
-        </View>
-        <View style={styles.listContainer}>
-          <Text style={styles.listTitle}>Instructions</Text>
-          {recipe.instructions.map((instruction) => (
-            <View key={instruction.id} style={styles.itemContainer}>
-              <View style={styles.dot} />
-              <Text style={styles.listItemText}>{instruction.step}</Text>
-            </View> 
-          ))}
+          {recipe.vegan_recipe_id ? (
+            <Button
+              title='Make it vegan!'
+              style={[styles.veganButton, { marginBottom: Spacings.m }]}
+              textStyle={styles.veganButtonText}
+              rightIcon={<Entypo name="leaf" size={20} color={Colors.onPrimary} />}
+              onPress={() => {}} />
+          ) : null}
+          <View style={[styles.listContainer, { marginBottom: Spacings.m }]}>
+            <Text style={styles.listTitle}>Ingredients</Text>
+            {recipe.Recipe_Ingredient_Measurement.map((ingredient: any, index: number) => (
+              <View key={index} style={styles.itemContainer}>
+                <View style={styles.dot} />
+                <Text style={styles.listItemText}>{ingredient.Ingredient.name} {ingredient.Measurement.measurement}</Text>
+              </View> 
+            ))}
+          </View>
+          <View style={[styles.listContainer, { marginBottom: Spacings.s_m }]}>
+            <Text style={styles.listTitle}>Instructions</Text>
+            {recipe.Instruction.map((instruction: any) => (
+              <View key={instruction.id} style={styles.itemContainer}>
+                <View style={styles.dot} />
+                <Text style={styles.listItemText}>{instruction.instruction}</Text>
+              </View> 
+            ))}
+          </View>
+          <Text style={styles.credit}>Recipe from Good Food</Text>
         </View>
         <RecipeDetailsModal
-          isVisible={isRecipeDetailsModalVisible} 
-          setIsVisible={setIsRecipeDetailsModalVisible}
+          recipeId={recipeId}
+          isVisible={isDetailsModalVisible} 
+          setIsVisible={setIsDetailsModalVisible}
           navigation={navigation} />
       </ScrollView>
     </SafeAreaView>
@@ -183,13 +115,14 @@ export default function RecipeDetailsScreen({ navigation }: RecipeDetailsScreenP
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: Spacings.m
+    paddingHorizontal: Spacings.m,
+    paddingBottom: Spacings.m
   },
   title: {
     fontSize: Sizes.h1,
     color: Colors.text_dark,
     width: '50%',
-    marginBottom: Spacings.m,
+    marginBottom: Spacings.s_m,
     marginTop: Spacings.m,
   },
   recipeNutritionContainer: {
@@ -210,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: Spacings.s,
     justifyContent: 'center',
-    alignItems  : 'center',
+    alignItems: 'center',
   },
   veganButtonText: {
     fontSize: Sizes.h3,
@@ -220,7 +153,6 @@ const styles = StyleSheet.create({
   listContainer: {
     backgroundColor: Colors.gray_100,
     padding: Spacings.m,
-    marginHorizontal: Spacings.m,
     borderRadius: 20
   },
   listTitle: {
@@ -247,4 +179,9 @@ const styles = StyleSheet.create({
     color: Colors.text_dark,
     marginBottom: Spacings.xs
   },
+  credit: {
+    fontSize: Sizes.m,
+    color: Colors.text_dark,
+    alignSelf: 'center',
+  }
 });

@@ -1,3 +1,4 @@
+/* ===== COMPONENTS ===== */
 export { default as BottomNavBar } from './BottomNavBar';
 export { default as Button } from './Button';
 export { default as Calendar } from './Calendar';
@@ -11,5 +12,5 @@ export { default as Pagination } from './Pagination';
 export { default as RecipeCard } from './RecipeCard';
 export { default as RecipeDetailsModal } from './RecipeDetailsModal';
 
-// Consts
+/* ===== COMPONENT CONSTS ===== */
 export { BOTTOM_NAV_BAR_HEIGHT } from './BottomNavBar';
