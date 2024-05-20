@@ -1,4 +1,7 @@
-import { StyleSheet, ScrollView, View, Text, TextInput, Dimensions } from "react-native";
+import {
+  StyleSheet, KeyboardAvoidingView, ScrollView,
+  View, Text, TextInput, Dimensions
+} from "react-native";
 import React, { useState } from 'react';
 import Modal from 'react-native-modal';
 import { Colors, Sizes, Spacings } from '@values';
@@ -98,38 +101,6 @@ const setMaxTimeSafe = (value: string) => {
               textStyle={[styles.h2, { color: Colors.secondary }]}
               onPress={resetFilters} />
           </View>
-          <Text style={styles.h2}>Ingredients</Text>
-          <View style={styles.rowWrap}>
-            {ingredientsToShow.map(item => 
-              <Button
-                key={item.id}
-                title={item.name}
-                style={[
-                  styles.button,
-                  selectedIngredients[item.id] ? styles.selectedButton : null,
-                ]}
-                textStyle={{ fontSize: Sizes.l }}
-                onPress={() => setSelectedIngredients({ ...selectedIngredients, [item.id]: !selectedIngredients[item.id] })}
-              />
-            )}
-          </View>
-          {isMoreIngredients && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(ingredients, ingredientsToShow, setIngredientsToShow)} />}
-          <Text style={styles.h2}>Categories</Text>
-          <View style={styles.rowWrap}>
-            {categoriesToShow.map(item => 
-              <Button
-              key={item.id}
-              title={item.name}
-              style={[
-                styles.button,
-                selectedCategories[item.id] ? styles.selectedButton : null,
-              ]}
-              textStyle={{ fontSize: Sizes.l }}
-              onPress={() => setSelectedCategories({ ...selectedCategories, [item.id]: !selectedCategories[item.id] })}
-            />
-            )}
-          </View>
-          {isMoreCategories && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(categories, categoriesToShow, setCategoriesToShow)} />}
           <Text style={styles.h2}>Calories</Text>
           <View style={styles.rangeSection}>
             <TextInput
@@ -166,6 +137,38 @@ const setMaxTimeSafe = (value: string) => {
               keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Mins</Text>
           </View>
+          <Text style={styles.h2}>Ingredients</Text>
+          <View style={styles.rowWrap}>
+            {ingredientsToShow.map(item => 
+              <Button
+                key={item.id}
+                title={item.name}
+                style={[
+                  styles.button,
+                  selectedIngredients[item.id] ? styles.selectedButton : null,
+                ]}
+                textStyle={{ fontSize: Sizes.l }}
+                onPress={() => setSelectedIngredients({ ...selectedIngredients, [item.id]: !selectedIngredients[item.id] })}
+              />
+            )}
+          </View>
+          {isMoreIngredients && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(ingredients, ingredientsToShow, setIngredientsToShow)} />}
+          <Text style={styles.h2}>Categories</Text>
+          <View style={styles.rowWrap}>
+            {categoriesToShow.map(item => 
+              <Button
+              key={item.id}
+              title={item.name}
+              style={[
+                styles.button,
+                selectedCategories[item.id] ? styles.selectedButton : null,
+              ]}
+              textStyle={{ fontSize: Sizes.l }}
+              onPress={() => setSelectedCategories({ ...selectedCategories, [item.id]: !selectedCategories[item.id] })}
+            />
+            )}
+          </View>
+          {isMoreCategories && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(categories, categoriesToShow, setCategoriesToShow)} />}
         </ScrollView>
       </View>
     </Modal>

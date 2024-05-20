@@ -51,7 +51,8 @@ export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetail
       <ScrollView>
         <TouchableOpacity activeOpacity={0.9} onPress={() => Linking.openURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
           <Image source={{ uri: recipe.imageUrl }} style={{ height: 360 }} />
-          <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
+          <LinearGradient colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)', 'rgba(0,0,0,9)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} />
+          <Text style={{ width: '100%', color: Colors.text_light, fontSize: Sizes.l, textAlign: 'center', position: 'absolute', top: 330 }}>Click the image to watch a video tutorial!</Text>
         </TouchableOpacity>
         <IconButton
           icon={
