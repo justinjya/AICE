@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -90,10 +90,9 @@ function WeekHeader({ selectedDay, setSelectedDay }: WeekHeaderProps) {
   useEffect(() => {
     const start = new Date(selectedDay);
     const dayOfWeek = start.getDay();
-    const diff = dayOfWeek === 0 ? 6 : dayOfWeek;
-    start.setDate(start.getDate() - diff);
+    start.setDate(start.getDate() - dayOfWeek);
     setStartOfWeek(start);
-  }, []);
+  }, [selectedDay]);
 
   const changeWeek = (direction: number) => {
     setStartOfWeek(prevStartOfWeek => {
@@ -204,6 +203,11 @@ export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekSc
   useEffect(() => {}, [session])
 
   const handleAddPress = async (recipeId: number, schedule: string) => {
+    if (session === null) {
+      Alert.alert('You must be logged in to add a recipe to your meal plans.');
+      return;
+    }
+
     if (recipeId !== undefined) {
       try {
         await addMealPlan(recipeId, session as Session, schedule, selectedDay);
@@ -232,7 +236,7 @@ export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekSc
              <Ionicons name="chevron-back" size={24} color={Colors.text_dark} />
            }
            style={{ marginRight: Spacings.l }}
-           onPress={() => navigation.goBack()}/>
+           onPress={() => navigation.goBack()} />
           <Text style={styles.title}>Meal Plan</Text>
         </View>
         <IconButton
@@ -242,7 +246,7 @@ export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekSc
               size={24}
               color={Colors.secondary} />
           }
-          onPress={() => navigation.goBack()}/>
+          onPress={() => navigation.goBack()} />
       </View>
       <WeekHeader selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
       <MealsSection 
@@ -318,7 +322,6 @@ const styles = StyleSheet.create({
   },
   emptySection: {
     width: '100%',
-    // height: 4,
     flexDirection: 'row',
     backgroundColor: Colors.gray_100,
     borderRadius: 10,

@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useMemo, useRef, useContext } from 'react';
 import { RecipesContext, AuthContext } from '@utils';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
@@ -124,6 +124,11 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const [isFilterActive, setIsFilterActive] = useState(false);
 
+  // TO-DO: Add filters
+  const filteredRecipes = useMemo(() => {
+    return recipes.filter(() => true);
+  }, [recipes, /* your filter criteria here */]);
+
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <FlatList 
@@ -134,7 +139,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
             filterActiveState={{ isFilterActive, setIsFilterActive }}
             navigation={navigation} />
         }
-        data={recipes}
+        data={filteredRecipes}
         numColumns={2}
         keyExtractor={item => item.id.toString()}
         columnWrapperStyle={styles.cardsContainer}
