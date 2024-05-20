@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@values';
 import IconButton from './IconButton';
@@ -6,9 +6,12 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 type IconName = 'home' | 'heart-sharp' | 'calendar-clear' | 'person' | 'home-outline' | 'heart-outline' | 'calendar-clear-outline' | 'person-outline';
 
+export const IOS_BOTTOM_NAV_BAR_HEIGHT = 96;
+export const ANDROID_BOTTOM_NAV_BAR_HEIGHT = 76;
+
 export default function BottomNavBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: Platform.OS === 'android' ? ANDROID_BOTTOM_NAV_BAR_HEIGHT : IOS_BOTTOM_NAV_BAR_HEIGHT }]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label: string =
@@ -60,12 +63,9 @@ export default function BottomNavBar({ state, descriptors, navigation }: BottomT
   );
 }
 
-export const BOTTOM_NAV_BAR_HEIGHT = 96;
-
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: BOTTOM_NAV_BAR_HEIGHT,
     position: 'absolute',
     flexDirection: 'row',
     bottom: 0,

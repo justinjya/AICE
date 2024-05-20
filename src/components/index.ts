@@ -13,4 +13,4 @@ export { default as RecipeCard } from './RecipeCard';
 export { default as RecipeDetailsModal } from './RecipeDetailsModal';
 
 /* ===== COMPONENT CONSTS ===== */
-export { BOTTOM_NAV_BAR_HEIGHT } from './BottomNavBar';
+export { IOS_BOTTOM_NAV_BAR_HEIGHT, ANDROID_BOTTOM_NAV_BAR_HEIGHT } from './BottomNavBar';
