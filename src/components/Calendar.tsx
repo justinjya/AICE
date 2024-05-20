@@ -1,8 +1,9 @@
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Colors, Spacings, Sizes } from '@values';
+import React, { useCallback, useMemo } from 'react';
 
-interface CalendarMonthProps {
+interface CalendarProps {
   recipeId?: number;
   mealPlans: Array<any>;
   year: number;
@@ -13,23 +14,26 @@ const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
-export default function Calendar({ recipeId, mealPlans, year, month }: CalendarMonthProps) {
+function Calendar({ recipeId, mealPlans, year, month }: CalendarProps) {
   const navigation: NavigationProp<ParamListBase> = useNavigation();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const totalDays = firstDayOfMonth + daysInMonth;
-  const paddingDaysStart = Array.from({ length: firstDayOfMonth }, () => null);
-  const paddingDaysEndLength = totalDays % 7 === 0 ? 0 : 7 - (totalDays % 7);
-  const paddingDaysEnd = Array.from({ length: paddingDaysEndLength }, () => null);
   
-  const allDays = [...paddingDaysStart, ...days, ...paddingDaysEnd];
+  const allDays = useMemo(() => {
+    const paddingDaysStart = Array.from({ length: firstDayOfMonth }, () => null);
+    const paddingDaysEndLength = totalDays % 7 === 0 ? 0 : 7 - (totalDays % 7);
+    const paddingDaysEnd = Array.from({ length: paddingDaysEndLength }, () => null);
+    return [...paddingDaysStart, ...days, ...paddingDaysEnd];
+  }, [firstDayOfMonth, totalDays, days]);
 
-  const isDateEqual = (date1: Date, date2: Date) => 
+  const isDateEqual = useCallback((date1: Date, date2: Date) => 
     date1.getDate() === date2.getDate() && 
     date1.getMonth() === date2.getMonth() && 
-    date1.getFullYear() === date2.getFullYear();
+    date1.getFullYear() === date2.getFullYear(),
+  [],);
 
   const isMealPlanned = (date: Date) => {
     return mealPlans.some(meal => {
@@ -39,6 +43,8 @@ export default function Calendar({ recipeId, mealPlans, year, month }: CalendarM
   };
 
   const handleDayPress = (year: number, month: number, day: number, recipeId: number | undefined) => {
+    if (day === null) return;
+
     if (recipeId) {
       navigation.navigate('MS_MealPlanWeek', { recipeId: recipeId, year: year, month: month, day: day });
     } else {
@@ -67,7 +73,7 @@ export default function Calendar({ recipeId, mealPlans, year, month }: CalendarM
               onPress={() => handleDayPress(year, month, day as number, recipeId)}
             >
               <Text style={day !== null ? styles.dayText : {}}>{day}</Text>
-              {isPlanned ? 
+              {isPlanned && day !== null ? 
                 <View style={[styles.dot, { backgroundColor: Colors.primary }]}/>
                 : 
                 <View style={[styles.dot, { backgroundColor: 'transparent' }]}/>
@@ -80,6 +86,8 @@ export default function Calendar({ recipeId, mealPlans, year, month }: CalendarM
     </>
   );
 };
+
+export default React.memo(Calendar);
 
 const screenWidth = Dimensions.get('window').width;
 const magicSpacing = 10; // it just works hahaha

@@ -1,75 +1,12 @@
 import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
 import { LongRecipeCard, IconButton } from '@components';
 import { AuthContext, RecipesContext, addMealPlan, fetchRecipe } from '@utils';
 import { Session } from '@supabase/supabase-js';
-
-// const mealPlans = [
-//   {
-//     id: 1,
-//     recipe: { 
-//       id: 1,
-//       name: 'Breakfast Hash',
-//       calories: 350,
-//       duration: 45,
-//       imageUrl: 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg',
-//     },
-//     schedule: 'Breakfast',
-//     date: new Date(2024, 4, 14),
-//   },
-//   {
-//     id: 2,
-//     recipe: {
-//       id: 2,
-//       name: 'Pancake Tacos',
-//       calories: 450,
-//       duration: 60,
-//       imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
-//     }, 
-//     schedule: 'Breakfast',
-//     date: new Date(2024, 4, 14),
-//   },
-//   {
-//     id: 3,
-//     recipe: {
-//       id: 3,
-//       name: 'Mushrooms on Toast',
-//       calories: 300,
-//       duration: 30,
-//       imageUrl: 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/6/12/3/FNM070116_Penne-with-Vodka-Sauce-and-Mini-Meatballs-recipe_s4x3.jpg.rend.hgtvcom.1280.1280.suffix/1465939620872.jpeg',
-//     }, 
-//     schedule: 'Breakfast',
-//     date: new Date(2024, 4, 14),
-//   },
-//   {
-//     id: 4,
-//     recipe: {
-//       id: 4,
-//       name: 'Padron Peppers',
-//       calories: 250,
-//       duration: 20,
-//       imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
-//     },
-//     schedule: 'Dinner',
-//     date: new Date(2024, 4, 14),
-//   },
-//   {
-//     id: 5,
-//     recipe: {
-//       id: 4,
-//       name: 'Padron Peppers',
-//       calories: 250,
-//       duration: 20,
-//       imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
-//     },
-//     schedule: 'Breakfast',
-//     date: new Date(2024, 4, 17),
-//   },
-// ];
 
 interface WeekHeaderProps {
   selectedDay: Date;
@@ -145,7 +82,6 @@ interface MealSectionProps {
   array: any[];
   schedule: string;
   date: Date;
-  onCardPress?: () => void;
   onAddPress?: () => void;
 };
 
@@ -153,9 +89,9 @@ function MealsSection({
   array,
   schedule,
   date,
-  onCardPress,
   onAddPress,
 }: MealSectionProps) {
+  const navigation: NavigationProp<ParamListBase> = useNavigation();
   const meals = useMemo(() => {
     return array.filter(meal => {
       const mealDate = new Date(meal.date);
@@ -168,11 +104,11 @@ function MealsSection({
       <View style={[styles.titleContainer, { marginBottom: Spacings.m }]}>
         <Text style={styles.h2}>{schedule}</Text>
       </View>
-      {meals.map(recipe => (
-        <View key={recipe.Recipe.id} style={{ marginBottom: Spacings.xxs }}>
+      {meals.map(meals => (
+        <View key={meals.id} style={{ marginBottom: Spacings.xxs }}>
           <LongRecipeCard
-            recipe={recipe.Recipe}
-            onPress={onCardPress} />
+            recipe={meals.Recipe}
+            onPress={() => navigation.navigate('MS_Details', { recipeId: meals.Recipe.id })} />
         </View>
       ))}
       <IconButton
@@ -253,19 +189,16 @@ export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekSc
         array={mealPlans} 
         schedule='Breakfast' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')}
         onAddPress={() => handleAddPress(recipeId, 'Breakfast')} />
       <MealsSection 
         array={mealPlans} 
         schedule='Lunch' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')}
         onAddPress={() => handleAddPress(recipeId, 'Lunch')} />
       <MealsSection 
         array={mealPlans} 
         schedule='Dinner' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')}
         onAddPress={() => handleAddPress(recipeId, 'Dinner')} />
     </SafeAreaView>
   )

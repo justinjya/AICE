@@ -7,6 +7,10 @@ export {
   fetchUser,
   updateUser,
   fetchRecipes,
+  fetchIngredients,
+  fetchRecipesWithIngredients,
+  fetchCategories,
+  fetchRecipesWithCategories,
   fetchRecipe,
   fetchRecipeDetails,
   fetchFavoriteRecipes,
@@ -22,3 +26,4 @@ export {
 /* ===== CONTEXT API ===== */
 export { AuthProvider, AuthContext } from './AuthContext';
 export { RecipesProvider, RecipesContext } from './RecipesContext';
+export { FiltersType, FiltersProvider, FiltersContext } from './FiltersContext';

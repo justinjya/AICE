@@ -1,88 +1,84 @@
 import { StyleSheet, ScrollView, View, Text, TextInput, Dimensions } from "react-native";
 import React, { useState } from 'react';
-import { Colors, Sizes, Spacings } from '@values';
 import Modal from 'react-native-modal';
+import { Colors, Sizes, Spacings } from '@values';
+import { FiltersType, FiltersContext } from "@utils";
 import Button from './Button';
-
-const ingredients = [
-  { id: 1, name: 'Apple' },
-  { id: 2, name: 'Banana' },
-  { id: 3, name: 'Carrot' },
-  { id: 4, name: 'Doughnut' },
-  { id: 5, name: 'Egg' },
-  { id: 6, name: 'Fries' },
-  { id: 7, name: 'Grapes' },
-  { id: 8, name: 'Hamburger' },
-  { id: 9, name: 'Ice Cream' },
-  { id: 10, name: 'Jelly' },
-  { id: 11, name: 'Kiwi' },
-  { id: 12, name: 'Lemon' },
-  { id: 13, name: 'Mango' },
-  { id: 14, name: 'Noodles' },
-  { id: 15, name: 'Orange' },
-  { id: 16, name: 'Pasta' },
-  { id: 17, name: 'Quiche' },
-  { id: 18, name: 'Rice' },
-  { id: 19, name: 'Strawberry' },
-  { id: 20, name: 'Tomato' },
-  { id: 21, name: 'Udon' },
-  { id: 22, name: 'Vegetables' },
-  { id: 23, name: 'Watermelon' },
-  { id: 24, name: 'Xylocarp' },
-  { id: 25, name: 'Yogurt' },
-  { id: 26, name: 'Zucchini' },
-];
-
-const categories = [
-  { id: 1, name: 'Breakfast' },
-  { id: 2, name: 'Lunch' },
-  { id: 3, name: 'Dinner' },
-  { id: 4, name: 'Snack' },
-  { id: 5, name: 'Dessert' },
-  { id: 6, name: 'Drink' },
-  { id: 7, name: 'Appetizer' },
-  { id: 8, name: 'Main Course' },
-  { id: 9, name: 'Side Dish' },
-  { id: 10, name: 'Salad' },
-  { id: 11, name: 'Soup' },
-  { id: 12, name: 'Bread' },
-  { id: 13, name: 'Sauce' },
-  { id: 14, name: 'Marinade' },
-  { id: 15, name: 'Dip' },
-  { id: 16, name: 'Spread' },
-  { id: 17, name: 'Condiment' },
-  { id: 18, name: 'Preserve' },
-  { id: 19, name: 'Candy' },
-  { id: 20, name: 'Snack' },
-  { id: 21, name: 'Beverage' },
-  { id: 22, name: 'Alcoholic Beverage' },
-  { id: 23, name: 'Cocktail' },
-  { id: 24, name: 'Smoothie' },
-  { id: 25, name: 'Milkshake' },
-  { id: 26, name: 'Hot Drink' },
-  { id: 27, name: 'Cold Drink' },
-];
 
 interface FiltersModalProps {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
 }
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 8;
 
 export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalProps) {
+  const { ingredients, categories, setFilters } = React.useContext(FiltersContext);
   const [ingredientsToShow, setIngredientsToShow] = useState(ingredients.slice(0, ITEMS_PER_PAGE));
   const [categoriesToShow, setCategoriesToShow] = useState(categories.slice(0, ITEMS_PER_PAGE));
   const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: boolean }>({});
   const [selectedCategories, setSelectedCategories] = useState<{ [key: string]: boolean }>({});
+  const [minCalories, setMinCalories] = useState('');
+  const [maxCalories, setMaxCalories] = useState('');
+  const [minTime, setMinTime] = useState('');
+  const [maxTime, setMaxTime] = useState('');
+
+  const applyFilters = () => {
+    const newFilters: FiltersType = {
+      ingredients: selectedIngredients ? Object.keys(selectedIngredients).filter(key => selectedIngredients[key]).map(Number) : [],
+      categories: selectedCategories ? Object.keys(selectedCategories).filter(key => selectedCategories[key]).map(Number) : [],
+      minCalories: minCalories ? Number(minCalories) : null,
+      maxCalories: maxCalories ? Number(maxCalories) : null,
+      minTime: minTime ? Number(minTime) : null,
+      maxTime: maxTime ? Number(maxTime) : null,
+    };
+
+    setFilters(newFilters);
+  };
+
+  const resetFilters = () => {
+    setSelectedIngredients({});
+    setSelectedCategories({});
+  };
 
   const handleShowMore = (array: Array<any>, itemsToShow: Array<any>, setItemsToShow: React.Dispatch<React.SetStateAction<any>>) => {
     const nextItems = array.slice(itemsToShow.length, itemsToShow.length + ITEMS_PER_PAGE);
     setItemsToShow([...itemsToShow, ...nextItems]);
   }
-
   const isMoreIngredients = ingredientsToShow.length < ingredients.length;
   const isMoreCategories = categoriesToShow.length < categories.length;
+
+  const setMinCaloriesSafe = (value: string) => {
+  if (maxCalories && Number(value) > Number(maxCalories)) {
+    alert('Min calories cannot be greater than max calories');
+    return;
+  }
+  setMinCalories(value);
+};
+
+const setMaxCaloriesSafe = (value: string) => {
+  if (minCalories && Number(value) < Number(minCalories)) {
+    alert('Max calories cannot be less than min calories');
+    return;
+  }
+  setMaxCalories(value);
+};
+
+const setMinTimeSafe = (value: string) => {
+  if (maxTime && Number(value) > Number(maxTime)) {
+    alert('Min time cannot be greater than max time');
+    return;
+  }
+  setMinTime(value);
+};
+
+const setMaxTimeSafe = (value: string) => {
+  if (minTime && Number(value) < Number(minTime)) {
+    alert('Max time cannot be less than min time');
+    return;
+  }
+  setMaxTime(value);
+};
 
   return (
     <Modal 
@@ -91,12 +87,17 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
       swipeDirection="down"
       style={{ width: '100%', margin: 0 }}
       propagateSwipe
-    >
+      onModalHide={applyFilters} >
       <View style={styles.container}>
         <View style={styles.pullBarThingy} />
         <ScrollView showsVerticalScrollIndicator={false}>
-
-          <Text style={styles.h1}>Filters</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.h1}>Filters</Text>
+            <Button
+              title='Reset'
+              textStyle={[styles.h2, { color: Colors.secondary }]}
+              onPress={resetFilters} />
+          </View>
           <Text style={styles.h2}>Ingredients</Text>
           <View style={styles.rowWrap}>
             {ingredientsToShow.map(item => 
@@ -131,18 +132,38 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
           {isMoreCategories && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(categories, categoriesToShow, setCategoriesToShow)} />}
           <Text style={styles.h2}>Calories</Text>
           <View style={styles.rangeSection}>
-            <TextInput placeholder='Minimum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <TextInput
+              value={minCalories}
+              onChangeText={setMinCaloriesSafe}
+              placeholder='Minimum'
+              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
             <Text style={{ marginRight: Spacings.s }}>-</Text>
-            <TextInput placeholder='Maximum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <TextInput
+              value={maxCalories}
+              onChangeText={setMaxCaloriesSafe}
+              placeholder='Maximum'
+              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
           </View>
           <Text style={styles.h2}>Time</Text>
           <View style={styles.rangeSection}>
-            <TextInput placeholder='Minimum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <TextInput
+              value={minTime}
+              onChangeText={setMinTimeSafe}
+              placeholder='Minimum'
+              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Mins</Text>
             <Text style={{ marginRight: Spacings.s }}>-</Text>
-            <TextInput placeholder='Maximum' style={[styles.button, { fontSize: Sizes.l, marginRight: Spacings.s }]} />
+            <TextInput
+              value={maxTime}
+              onChangeText={setMaxTimeSafe}
+              placeholder='Maximum'
+              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Mins</Text>
           </View>
         </ScrollView>
@@ -187,7 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacings.s
   },
   button: {
-    width: screenWidth / 3 - Spacings.l,
+    width: screenWidth / 2 - Spacings.l,
     height: 28,
     backgroundColor: Colors.gray_100,
     borderRadius: 10,
@@ -206,6 +227,19 @@ const styles = StyleSheet.create({
   showMore: {
     color: Colors.secondary,
     fontSize: Sizes.l
+  },
+  rangeInput: {
+    width: screenWidth / 3 - Spacings.l,
+    height: 28,
+    backgroundColor: Colors.gray_100,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.gray_200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Spacings.l,
+    marginRight: Spacings.xs,
+    marginBottom: Spacings.xs
   },
   rangeSection: {
     flexDirection: 'row',

@@ -6,7 +6,16 @@ import { useState, useEffect, useCallback } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { Colors } from '@values';
 import { RootNavigator } from '@navigation';
-import { AuthProvider, RecipesProvider, fetchRecipes } from '@utils'
+import {
+  AuthProvider,
+  RecipesProvider,
+  FiltersProvider,
+  fetchRecipes,
+  fetchIngredients,
+  fetchRecipesWithIngredients,
+  fetchCategories,
+  fetchRecipesWithCategories,
+} from '@utils'
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,6 +23,10 @@ export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [initialRecipes, setInitialRecipes] = useState<any[]>([]);
   const [suggestedRecipes, setSuggestedRecipes] = useState<any[]>([]);
+  const [ingredients, setIngredients] = useState<any[]>([]);
+  const [recipesWithIngredients, setRecipesWithIngredients] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [recipesWithCategories, setRecipesWithCategories] = useState<any[]>([]);
 
   useEffect(() => {
     async function prepare() {
@@ -29,6 +42,11 @@ export default function App() {
           const randomRecipes = Array.from(indices).map(index => data[index]);
           setSuggestedRecipes(randomRecipes);
         });
+
+        await fetchIngredients().then((data) => setIngredients(data));
+        await fetchRecipesWithCategories().then((data) => setRecipesWithCategories(data));
+        await fetchCategories().then((data) => setCategories(data));
+        await fetchRecipesWithIngredients().then((data) => setRecipesWithIngredients(data));
       } catch (error) {
         console.log(error);
       } finally {
@@ -52,12 +70,18 @@ export default function App() {
   return (
     <AuthProvider>
       <RecipesProvider initialRecipes={initialRecipes} suggestedRecipes={suggestedRecipes}>
-        <SafeAreaProvider style={styles.container} onLayout={onLayoutRootView}>
-          <NavigationContainer>
-            <RootNavigator />
-            <StatusBar style="auto" />
-          </NavigationContainer>
-        </SafeAreaProvider>
+        <FiltersProvider
+          initialIngredients={ingredients}
+          initialCategories={categories}
+          initialRecipesWithIngredients={recipesWithIngredients}
+          initialRecipesWithCategories={recipesWithCategories}>
+          <SafeAreaProvider style={styles.container} onLayout={onLayoutRootView}>
+            <NavigationContainer>
+              <RootNavigator />
+              <StatusBar style="dark" />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </FiltersProvider>
       </RecipesProvider>
     </AuthProvider>
   );

@@ -74,6 +74,13 @@ export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetail
             <SimpleLineIcons name="clock" size={17} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
             <Text style={styles.recipeNutritionText}>{recipe.duration} mins</Text>
           </View>
+          <View style={styles.categoriesContainer}>
+            {recipe.Recipe_Category.map((category: any, index: number) => (
+              <View key={index} style={styles.categoryContainer}>
+                <Text style={styles.categoryText}>{category.Category.name}</Text>
+              </View>
+            ))}
+          </View>
           {recipe.vegan_recipe_id ? (
             <Button
               title='Make it vegan!'
@@ -87,7 +94,11 @@ export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetail
             {recipe.Recipe_Ingredient_Measurement.map((ingredient: any, index: number) => (
               <View key={index} style={styles.itemContainer}>
                 <View style={styles.dot} />
-                <Text style={styles.listItemText}>{ingredient.Measurement.measurement} {ingredient.Ingredient.name.toLowerCase()}</Text>
+                {ingredient.Measurement.measurement !== null ? (
+                  <Text style={styles.listItemText}>{ingredient.Measurement.measurement} {ingredient.Ingredient.name.toLowerCase()}</Text>
+                ) : (
+                  <Text style={styles.listItemText}>{ingredient.Ingredient.name}</Text>
+                )}
               </View> 
             ))}
           </View>
@@ -133,9 +144,23 @@ const styles = StyleSheet.create({
     fontSize: Sizes.h3,
     color: Colors.text_dark
   },
-  recipeDetailsContainer: {
-    backgroundColor: Colors.gray_100,
-    marginBottom: Spacings.m,
+  categoriesContainer: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    marginBottom: Spacings.m
+  },
+  categoryContainer: {
+    backgroundColor: Colors.secondary,
+    borderRadius: 10,
+    paddingHorizontal: Spacings.m,
+    paddingVertical: Spacings.s,
+    alignItems: 'center',
+    marginBottom: Spacings.xxs,
+    marginRight: Spacings.xxs
+  },
+  categoryText: {
+    fontSize: Sizes.l,
+    color: Colors.onSecondary
   },
   veganButton: {
     backgroundColor: Colors.tertiary,

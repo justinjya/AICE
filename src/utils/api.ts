@@ -11,18 +11,19 @@ export async function signInWithEmail(email: string, password: string) {
 };
 
 export async function signUpWithEmail(name: string, email: string, password: string) {
-  const { data: { session }, error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
   });
   if (error) throw error;
 
-  const { error: insertError } = await supabase
-    .from('User')
-    .insert({ name: name });
-  if (insertError) throw insertError;
-
-  return session;
+  const user = data.user;
+  if (user) {
+    const { error: insertError } = await supabase
+      .from('User')
+      .insert({ id: user.id, name: name });
+    if (insertError) throw insertError;
+  }
 };
 
 export async function signOut() {
@@ -67,6 +68,42 @@ export async function fetchRecipes() {
   return recipes;
 };
 
+export async function fetchIngredients() {
+  const { data: ingredients, error } = await supabase
+    .from('Ingredient')
+    .select('*');
+  if (error) throw error;
+
+  return ingredients;
+}
+
+export async function fetchRecipesWithIngredients() {
+  const { data: recipes, error } = await supabase
+    .from('Recipe_Ingredient_Measurement')
+    .select('*');
+  if (error) throw error;
+
+  return recipes;
+}
+
+export async function fetchCategories() {
+  const { data: categories, error } = await supabase
+    .from('Category')
+    .select('*');
+  if (error) throw error;
+
+  return categories;
+}
+
+export async function fetchRecipesWithCategories() {
+  const { data: recipes, error } = await supabase
+    .from('Recipe_Category')
+    .select('*');
+  if (error) throw error;
+
+  return recipes;
+}
+
 export async function fetchRecipe(recipeId: number) {
   const { data: recipe, error } = await supabase
     .from('Recipe')
@@ -88,6 +125,11 @@ export async function fetchRecipeDetails(recipeId: number) {
       duration,
       vegan_recipe_id,
       imageUrl,
+      Recipe_Category (
+        Category (
+          name
+        )
+      ),
       Recipe_Ingredient_Measurement (
         Ingredient (
           name
@@ -160,6 +202,7 @@ export async function fetchMealPlans(session: Session) {
   const { data: mealPlans, error } = await supabase
     .from('Meal_Plan')
     .select(`
+      id,
       date,
       schedule,
       Recipe(

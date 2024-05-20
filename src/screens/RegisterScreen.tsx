@@ -1,10 +1,10 @@
 import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { InputField, Button } from '@components';
 import { Colors, Sizes, Spacings } from "@values";
-import { AuthContext, signUpWithEmail } from "@utils";
+import { signUpWithEmail } from "@utils";
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -23,8 +23,8 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 
   const handleRegister = async () => {
     try {
-      signUpWithEmail(name, email, password);
-      navigation.goBack();
+      await signUpWithEmail(name, email, password);
+      navigation.navigate('AS_AccountDetails');
     } catch (error) {
       setIsSignUpFailed(true);
     }

@@ -1,45 +1,13 @@
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useState, useMemo, useRef, useContext } from 'react';
-import { RecipesContext, AuthContext } from '@utils';
+import { useState, useMemo, useRef, useContext, useEffect } from 'react';
+import { AuthContext, RecipesContext, FiltersContext } from '@utils';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
 import { FullWidthRecipeCard, RecipeCard, IconButton, Pagination, FiltersModal } from '@components';
 
-const todaysPicks = [
-  { 
-    id: 1,
-    name: 'Breakfast Hash',
-    calories: 350,
-    duration: 45,
-    imageUrl: 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg',
-  },
-  {
-    id: 2,
-    name: 'Pancake Tacos',
-    calories: 450,
-    duration: 60,
-    imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
-  }, 
-  {
-    id: 3,
-    name: 'Mushrooms on Toast',
-    calories: 300,
-    duration: 30,
-    imageUrl: 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/6/12/3/FNM070116_Penne-with-Vodka-Sauce-and-Mini-Meatballs-recipe_s4x3.jpg.rend.hgtvcom.1280.1280.suffix/1465939620872.jpeg',
-  }, 
-  {
-    id: 4,
-    name: 'Padron Peppers',
-    calories: 250,
-    duration: 20,
-    imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
-  },
-];
-
 interface HeaderComponentProps {
-  todaysPicks: any[];
   filtersModalState: {
     isFiltersModalVisible?: boolean;
     setIsFiltersModalVisible: (value: boolean) => void;
@@ -58,6 +26,7 @@ function HeaderComponent({
 }: HeaderComponentProps) {
   const { session, name } = useContext(AuthContext);
   const { suggestions } = useContext(RecipesContext);
+  const { filters } = useContext(FiltersContext);
   const insets = useSafeAreaInsets();
   const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 });
   const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
@@ -65,6 +34,17 @@ function HeaderComponent({
   });
 
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const isFilterFilled = 
+      filters.categories.length > 0 &&
+      filters.ingredients.length > 0 &&
+      filters.minCalories !== null &&
+      filters.maxCalories !== null &&
+      filters.minTime !== null &&
+      filters.maxTime !== null;
+    setIsFilterActive(isFilterFilled);
+  }, [filters, setIsFilterActive]);
 
   return (
     <>
@@ -121,20 +101,44 @@ interface HomeScreenProps {
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { recipes } = useContext(RecipesContext);
+  const { filters, recipesWithIngredients, recipesWithCategories } = useContext(FiltersContext);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const [isFilterActive, setIsFilterActive] = useState(false);
 
-  // TO-DO: Add filters
   const filteredRecipes = useMemo(() => {
-    return recipes.filter(() => true);
-  }, [recipes, /* your filter criteria here */]);
+    return recipes.filter(recipe => {
+      const recipeIngredients = recipesWithIngredients
+        .filter(item => item.recipe_id === recipe.id)
+        .map(item => item.ingredient_id);
+
+      const recipeCategories = recipesWithCategories
+        .filter(item => item.recipe_id === recipe.id)
+        .map(item => item.category_id);
+
+      const hasIngredient = filters.ingredients && filters.ingredients.length > 0 ?
+        (filters.ingredients.length > 1 ?
+          filters.ingredients.every((ingredientId: number) => recipeIngredients.includes(ingredientId)) :
+          filters.ingredients.some((ingredientId: number) => recipeIngredients.includes(ingredientId))) :
+        true;
+
+      const hasCategory = filters.categories && filters.categories.length > 0 ?
+        filters.categories.some((categoryId: number) => recipeCategories.includes(categoryId)) :
+        true;
+
+      const hasValidCalories = (filters.minCalories ? recipe.calories >= filters.minCalories : true) && 
+                              (filters.maxCalories ? recipe.calories <= filters.maxCalories : true);
+      const hasValidTime = (filters.minTime ? recipe.time >= filters.minTime : true) && 
+                          (filters.maxTime ? recipe.time <= filters.maxTime : true);
+
+      return hasIngredient && hasCategory && hasValidCalories && hasValidTime;
+    });
+  }, [recipes, filters, recipesWithIngredients, recipesWithCategories]);
 
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <FlatList 
         ListHeaderComponent={
           <HeaderComponent 
-            todaysPicks={todaysPicks}
             filtersModalState={{ setIsFiltersModalVisible }}
             filterActiveState={{ isFilterActive, setIsFilterActive }}
             navigation={navigation} />
@@ -148,7 +152,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         } 
       />
       <FiltersModal 
-        key={isFiltersModalVisible ? 'visible' : 'hidden'} 
         isVisible={isFiltersModalVisible} 
         setIsVisible={setIsFiltersModalVisible} />
     </SafeAreaView>
