@@ -1,15 +1,16 @@
 import { StyleSheet, View, Text, Image, ScrollView, Linking, TouchableOpacity } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ParamListBase } from '@react-navigation/native';
 import { SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Spacings, Sizes, Colors } from "@values";
 import { Button, IconButton, RecipeDetailsModal } from "@components";
 import { fetchRecipeDetails } from "@utils";
 
 interface RecipeDetailsScreenProps {
-  navigation: NavigationProp<ParamListBase>
+  navigation: NativeStackNavigationProp<ParamListBase>;
   route: any,
 }
 
@@ -25,23 +26,21 @@ export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetail
     setIsDetailsModalVisible(!isDetailsModalVisible);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const getRecipeDetails = async () => {
-        try {
-          setIsLoading(true);
-          const fetchedRecipeDetails = await fetchRecipeDetails(recipeId);
-          setRecipe(fetchedRecipeDetails);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setIsLoading(false);
-        }
+  useEffect(() => {
+    const getRecipeDetails = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedRecipeDetails = await fetchRecipeDetails(recipeId);
+        setRecipe(fetchedRecipeDetails);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
       }
+    }
 
-      getRecipeDetails();
-    }, [recipeId])
-  );
+    getRecipeDetails();
+  }, [recipeId])
 
   if (isLoading) {
     return;
@@ -70,9 +69,9 @@ export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetail
               onPress={toggleRecipeDetailsModal} />
           </View>
           <View style={styles.recipeNutritionContainer}>
-            <SimpleLineIcons name="fire" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
-            <Text style={[styles.recipeNutritionText, { marginRight: Spacings.m }]}>{recipe.calories} kcal</Text>
-            <SimpleLineIcons name="clock" size={20} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
+            <SimpleLineIcons name="fire" size={17} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
+            <Text style={[styles.recipeNutritionText, { marginRight: Spacings.s }]}>{recipe.calories} kcal</Text>
+            <SimpleLineIcons name="clock" size={17} style={ {marginRight: Spacings.s, color: Colors.primary} }/>
             <Text style={styles.recipeNutritionText}>{recipe.duration} mins</Text>
           </View>
           {recipe.vegan_recipe_id ? (
@@ -81,14 +80,14 @@ export default function RecipeDetailsScreen({ navigation, route  }: RecipeDetail
               style={[styles.veganButton, { marginBottom: Spacings.m }]}
               textStyle={styles.veganButtonText}
               rightIcon={<Entypo name="leaf" size={20} color={Colors.onPrimary} />}
-              onPress={() => {}} />
+              onPress={() => navigation.push('HS_Details', { recipeId: recipe.vegan_recipe_id })} />
           ) : null}
           <View style={[styles.listContainer, { marginBottom: Spacings.m }]}>
             <Text style={styles.listTitle}>Ingredients</Text>
             {recipe.Recipe_Ingredient_Measurement.map((ingredient: any, index: number) => (
               <View key={index} style={styles.itemContainer}>
                 <View style={styles.dot} />
-                <Text style={styles.listItemText}>{ingredient.Ingredient.name} {ingredient.Measurement.measurement}</Text>
+                <Text style={styles.listItemText}>{ingredient.Measurement.measurement} {ingredient.Ingredient.name.toLowerCase()}</Text>
               </View> 
             ))}
           </View>
@@ -121,8 +120,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: Sizes.h1,
     color: Colors.text_dark,
-    width: '50%',
-    marginBottom: Spacings.s_m,
+    width: '80%',
+    marginBottom: Spacings.s,
     marginTop: Spacings.m,
   },
   recipeNutritionContainer: {

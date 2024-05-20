@@ -1,73 +1,75 @@
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacings, Sizes } from '@values';
 import { LongRecipeCard, IconButton } from '@components';
+import { AuthContext, RecipesContext, addMealPlan, fetchRecipe } from '@utils';
+import { Session } from '@supabase/supabase-js';
 
-const mealPlans = [
-  {
-    id: 1,
-    recipe: { 
-      id: 1,
-      name: 'Breakfast Hash',
-      calories: 350,
-      duration: 45,
-      imageUrl: 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg',
-    },
-    schedule: 'Breakfast',
-    date: new Date(2024, 4, 14),
-  },
-  {
-    id: 2,
-    recipe: {
-      id: 2,
-      name: 'Pancake Tacos',
-      calories: 450,
-      duration: 60,
-      imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
-    }, 
-    schedule: 'Breakfast',
-    date: new Date(2024, 4, 14),
-  },
-  {
-    id: 3,
-    recipe: {
-      id: 3,
-      name: 'Mushrooms on Toast',
-      calories: 300,
-      duration: 30,
-      imageUrl: 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/6/12/3/FNM070116_Penne-with-Vodka-Sauce-and-Mini-Meatballs-recipe_s4x3.jpg.rend.hgtvcom.1280.1280.suffix/1465939620872.jpeg',
-    }, 
-    schedule: 'Breakfast',
-    date: new Date(2024, 4, 14),
-  },
-  {
-    id: 4,
-    recipe: {
-      id: 4,
-      name: 'Padron Peppers',
-      calories: 250,
-      duration: 20,
-      imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
-    },
-    schedule: 'Dinner',
-    date: new Date(2024, 4, 14),
-  },
-  {
-    id: 5,
-    recipe: {
-      id: 4,
-      name: 'Padron Peppers',
-      calories: 250,
-      duration: 20,
-      imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
-    },
-    schedule: 'Breakfast',
-    date: new Date(2024, 4, 17),
-  },
-];
+// const mealPlans = [
+//   {
+//     id: 1,
+//     recipe: { 
+//       id: 1,
+//       name: 'Breakfast Hash',
+//       calories: 350,
+//       duration: 45,
+//       imageUrl: 'https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg',
+//     },
+//     schedule: 'Breakfast',
+//     date: new Date(2024, 4, 14),
+//   },
+//   {
+//     id: 2,
+//     recipe: {
+//       id: 2,
+//       name: 'Pancake Tacos',
+//       calories: 450,
+//       duration: 60,
+//       imageUrl: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&webp=true&resize=600,545',
+//     }, 
+//     schedule: 'Breakfast',
+//     date: new Date(2024, 4, 14),
+//   },
+//   {
+//     id: 3,
+//     recipe: {
+//       id: 3,
+//       name: 'Mushrooms on Toast',
+//       calories: 300,
+//       duration: 30,
+//       imageUrl: 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2016/6/12/3/FNM070116_Penne-with-Vodka-Sauce-and-Mini-Meatballs-recipe_s4x3.jpg.rend.hgtvcom.1280.1280.suffix/1465939620872.jpeg',
+//     }, 
+//     schedule: 'Breakfast',
+//     date: new Date(2024, 4, 14),
+//   },
+//   {
+//     id: 4,
+//     recipe: {
+//       id: 4,
+//       name: 'Padron Peppers',
+//       calories: 250,
+//       duration: 20,
+//       imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
+//     },
+//     schedule: 'Dinner',
+//     date: new Date(2024, 4, 14),
+//   },
+//   {
+//     id: 5,
+//     recipe: {
+//       id: 4,
+//       name: 'Padron Peppers',
+//       calories: 250,
+//       duration: 20,
+//       imageUrl: 'https://img.bestrecipes.com.au/iyddCRce/br/2019/02/1980-crunchy-chicken-twisties-drumsticks-951509-1.jpg',
+//     },
+//     schedule: 'Breakfast',
+//     date: new Date(2024, 4, 17),
+//   },
+// ];
 
 interface WeekHeaderProps {
   selectedDay: Date;
@@ -82,6 +84,7 @@ const isDateEqual = (date1: Date, date2: Date) =>
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function WeekHeader({ selectedDay, setSelectedDay }: WeekHeaderProps) {
+  const { mealPlans} = useContext(RecipesContext);
   const [startOfWeek, setStartOfWeek] = useState(new Date());
 
   useEffect(() => {
@@ -90,7 +93,7 @@ function WeekHeader({ selectedDay, setSelectedDay }: WeekHeaderProps) {
     const diff = dayOfWeek === 0 ? 6 : dayOfWeek;
     start.setDate(start.getDate() - diff);
     setStartOfWeek(start);
-  }, [selectedDay]);
+  }, []);
 
   const changeWeek = (direction: number) => {
     setStartOfWeek(prevStartOfWeek => {
@@ -101,10 +104,10 @@ function WeekHeader({ selectedDay, setSelectedDay }: WeekHeaderProps) {
   };
 
   const isMealPlanned = (date: Date) => {
-    return mealPlans.some(meal => 
-      meal.date instanceof Date && 
-      isDateEqual(meal.date, date)
-    );
+    return mealPlans.some(meal => {
+      const mealDate = new Date(meal.date);
+      return isDateEqual(mealDate, date);
+    });
   };
 
   return (
@@ -142,45 +145,46 @@ function WeekHeader({ selectedDay, setSelectedDay }: WeekHeaderProps) {
 interface MealSectionProps {
   array: any[];
   schedule: string;
-  date?: Date;
+  date: Date;
   onCardPress?: () => void;
   onAddPress?: () => void;
 };
 
-function MealsSection({ array, schedule, date, onCardPress, onAddPress }: MealSectionProps) {
-  const meals = array.filter(meal => 
-    meal.schedule === schedule && 
-    meal.date instanceof Date && 
-    date instanceof Date && 
-    isDateEqual(meal.date, date)
-  ).map(meal => meal.recipe);
+function MealsSection({
+  array,
+  schedule,
+  date,
+  onCardPress,
+  onAddPress,
+}: MealSectionProps) {
+  const meals = useMemo(() => {
+    return array.filter(meal => {
+      const mealDate = new Date(meal.date);
+      return meal.schedule === schedule && isDateEqual(mealDate, date);
+    });
+  }, [array, schedule, date]);
 
   return (
     <View style={{ marginBottom: Spacings.l }}>
       <View style={[styles.titleContainer, { marginBottom: Spacings.m }]}>
         <Text style={styles.h2}>{schedule}</Text>
-        <IconButton
-          icon={
-            <Ionicons
-              name='add'
-              size={24}
-              color={Colors.text_dark}
-              style={{ opacity: 0.5 }} />
-          }
-          onPress={onAddPress} />
       </View>
-      {meals.length === 0 ? (
-        <View style={styles.emptySection} />
-      ) : (
-        meals.map(recipe => (
-          <View key={recipe.id} style={{ marginBottom: Spacings.xxs }}>
-            <LongRecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onPress={onCardPress} />
-          </View>
-        ))
-      )}
+      {meals.map(recipe => (
+        <View key={recipe.Recipe.id} style={{ marginBottom: Spacings.xxs }}>
+          <LongRecipeCard
+            recipe={recipe.Recipe}
+            onPress={onCardPress} />
+        </View>
+      ))}
+      <IconButton
+        icon={
+          <Ionicons
+            name='add'
+            size={14}
+            color={Colors.gray_300} />
+          }
+        style={styles.emptySection}
+        onPress={onAddPress} />
     </View>
   )
 }
@@ -192,7 +196,32 @@ interface MealPlanWeekScreenProps {
 
 export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekScreenProps) {
   const { year, month, day } = route.params
+  const { recipeId } = route.params ?? { };
+  const { session } = useContext(AuthContext);
+  const { mealPlans, setMealPlans } = useContext(RecipesContext);
   const [selectedDay, setSelectedDay] = useState(new Date(year, month, day) as Date);
+
+  useEffect(() => {}, [session])
+
+  const handleAddPress = async (recipeId: number, schedule: string) => {
+    if (recipeId !== undefined) {
+      try {
+        await addMealPlan(recipeId, session as Session, schedule, selectedDay);
+        const fetchedRecipe = await fetchRecipe(recipeId);
+        const newMealPlan = {
+          Recipe: fetchedRecipe,
+          date: selectedDay.toISOString(),
+          schedule: schedule
+        };
+        setMealPlans(prevMealPlans => [...prevMealPlans, newMealPlan]);
+        navigation.setParams({ recipeId: undefined });
+      } catch (error) {
+        console.log(error);
+      };
+    } else {
+      navigation.navigate('HS_Home');
+    };
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -220,17 +249,20 @@ export default function MealPlanWeekScreen({ navigation, route }: MealPlanWeekSc
         array={mealPlans} 
         schedule='Breakfast' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')} />
+        onCardPress={() => navigation.navigate('MS_Details')}
+        onAddPress={() => handleAddPress(recipeId, 'Breakfast')} />
       <MealsSection 
         array={mealPlans} 
         schedule='Lunch' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')} />
+        onCardPress={() => navigation.navigate('MS_Details')}
+        onAddPress={() => handleAddPress(recipeId, 'Lunch')} />
       <MealsSection 
         array={mealPlans} 
         schedule='Dinner' 
         date={selectedDay}
-        onCardPress={() => navigation.navigate('MS_Details')} />
+        onCardPress={() => navigation.navigate('MS_Details')}
+        onAddPress={() => handleAddPress(recipeId, 'Dinner')} />
     </SafeAreaView>
   )
 }
@@ -286,8 +318,12 @@ const styles = StyleSheet.create({
   },
   emptySection: {
     width: '100%',
-    height: 4,
+    // height: 4,
+    flexDirection: 'row',
     backgroundColor: Colors.gray_100,
     borderRadius: 10,
+    alignItems:'center',
+    justifyContent: 'center',
+    paddingVertical: Spacings.s,
   },
 });

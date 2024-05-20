@@ -52,7 +52,6 @@ interface HeaderComponentProps {
 }
 
 function HeaderComponent({ 
-  todaysPicks,
   filtersModalState: { setIsFiltersModalVisible },
   filterActiveState: { isFilterActive, setIsFilterActive },
   navigation
@@ -86,13 +85,13 @@ function HeaderComponent({
         viewabilityConfig={viewabilityConfig.current}
         contentContainerStyle={{ marginBottom: Spacings.s }}
         renderItem={({ item }: any) => (
-          <FullWidthRecipeCard recipe={item} onPress={() => navigation.navigate('HS_Details')} />
+          <FullWidthRecipeCard recipe={item} onPress={() => navigation.navigate('HS_Details', { recipeId: item.id })} />
         )}
       />
       <View style={{ paddingHorizontal: Spacings.m }}>
         <Pagination
           activeIndex={activeIndex}
-          arr={suggestions}
+          arr={suggestions }
           style={{ width: 74, marginBottom: Spacings.l }} />
         <View style={[styles.titleContainer, { marginBottom: Spacings.s }]}>
           <Text style={[styles.title]}>All Recipes</Text>

@@ -4,12 +4,9 @@ import { Colors } from '@values';
 import IconButton from './IconButton';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
-interface BottomNavBarProps extends BottomTabBarProps {
-}
-
 type IconName = 'home' | 'heart-sharp' | 'calendar-clear' | 'person' | 'home-outline' | 'heart-outline' | 'calendar-clear-outline' | 'person-outline';
 
-export default function BottomNavBar({ state, descriptors, navigation }: BottomNavBarProps) {
+export default function BottomNavBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
     <View style={styles.container}>
       {state.routes.map((route, index) => {

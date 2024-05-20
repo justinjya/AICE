@@ -7,13 +7,18 @@ export {
   fetchUser,
   updateUser,
   fetchRecipes,
+  fetchRecipe,
   fetchRecipeDetails,
   fetchFavoriteRecipes,
   addFavorite,
   removeFavorite,
   checkIfFavorite,
+  fetchMealPlans,
+  addMealPlan,
+  removeMealPlan,
+  checkIfInMealPlan,
 } from './api';
 
 /* ===== CONTEXT API ===== */
 export { AuthProvider, AuthContext } from './AuthContext';
-export { RecipesProvider, RecipesContext } from './RecipeContext';
+export { RecipesProvider, RecipesContext } from './RecipesContext';

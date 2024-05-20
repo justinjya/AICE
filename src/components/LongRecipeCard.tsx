@@ -1,8 +1,7 @@
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
-import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Spacings, Sizes } from '@values';
-import IconButton from './IconButton';
 
 interface CardProps {
   recipe: {
@@ -43,14 +42,6 @@ export default function LongRecipeCard({ recipe, onPress }: CardProps) {
           <Text style={styles.smallCardTextDetails}>{recipe.duration} mins</Text>
         </View>
       </View>
-      <IconButton
-        icon={
-          <AntDesign
-            name='ellipsis1'
-            size={23}
-            color={Colors.onPrimary}
-            style={{ paddingRight: Spacings.m }} />
-        } />
     </TouchableOpacity>
   )
 }

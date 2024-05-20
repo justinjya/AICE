@@ -11,27 +11,28 @@ interface RecipeDetailsPopUpProps {
   recipeId: number;
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
-  navigation?: NavigationProp<ParamListBase>
+  navigation: NavigationProp<ParamListBase>
 }
 
 export default function RecipeDetailsModal({ recipeId, isVisible, setIsVisible, navigation }: RecipeDetailsPopUpProps) {
   const { session } =  useContext(AuthContext);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isInMealPlan, setIsInMealPlan] = useState(false);
+  const [isInMealPlan] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       async function fetchData() {
-        if (session) {
-          await checkIfFavorite(recipeId, session.user.id).then((result) => {
-            setIsFavorite(result);
-          });
-  
-          // TODO: Check if the recipe is in the user's meal plan
-        } else {
-          setIsFavorite(false);
-          setIsInMealPlan(false);
-        };
+        try {
+          if (session) {
+            await checkIfFavorite(recipeId, session).then((result) => {
+              setIsFavorite(result);
+            });
+          } else {
+            setIsFavorite(false);
+          };
+        } catch (error) {
+          console.log(error)
+        }
       };
   
       fetchData();
@@ -46,11 +47,10 @@ export default function RecipeDetailsModal({ recipeId, isVisible, setIsVisible, 
 
     try {
       if (!isFavorite) {
-        await addFavorite(recipeId, session.user.id);
+        await addFavorite(recipeId, session);
         setIsFavorite(true);
-      }
-      else if (isFavorite) {
-        await removeFavorite(recipeId, session.user.id);
+      } else {
+        await removeFavorite(recipeId, session);
         setIsFavorite(false);
       }
     } catch (error) {
@@ -58,10 +58,17 @@ export default function RecipeDetailsModal({ recipeId, isVisible, setIsVisible, 
     }
   };
 
-  const toggleMealPlan = () => {
-    setIsInMealPlan(!isInMealPlan);
+  const handleMealPlanPress = () => {
+    if (session === null) {
+      Alert.alert('You must be logged in to add a recipe to your meal plans.');
+      return;
+    }
+
+    navigation.navigate('MealPlan', { 
+      screen: 'MS_MealPlanMonth', 
+      params: { recipeId: recipeId }
+    });
     setIsVisible(false);
-    navigation?.navigate('MealPlan', { screen: 'MP_MealPlanMonth' })
   };
 
   return (
@@ -97,7 +104,7 @@ export default function RecipeDetailsModal({ recipeId, isVisible, setIsVisible, 
               color={isInMealPlan ? Colors.error : Colors.text_dark}
             />
           }
-          onPress={toggleMealPlan}
+          onPress={handleMealPlanPress}
           style={[styles.button, { marginBottom: Spacings.xxxl }]}
           textStyle={[styles.buttonText, { color: isInMealPlan ? Colors.error : Colors.text_dark }]}
         />

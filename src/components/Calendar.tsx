@@ -3,6 +3,7 @@ import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/
 import { Colors, Spacings, Sizes } from '@values';
 
 interface CalendarMonthProps {
+  recipeId?: number;
   mealPlans: Array<any>;
   year: number;
   month: number;
@@ -12,7 +13,7 @@ const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
-export default function Calendar({ mealPlans, year, month }: CalendarMonthProps) {
+export default function Calendar({ recipeId, mealPlans, year, month }: CalendarMonthProps) {
   const navigation: NavigationProp<ParamListBase> = useNavigation();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
@@ -31,11 +32,19 @@ export default function Calendar({ mealPlans, year, month }: CalendarMonthProps)
     date1.getFullYear() === date2.getFullYear();
 
   const isMealPlanned = (date: Date) => {
-    return mealPlans.some(meal => 
-      meal.date instanceof Date && 
-      isDateEqual(meal.date, date)
-    );
+    return mealPlans.some(meal => {
+      const mealDate = new Date(meal.date);
+      return isDateEqual(mealDate, date);
+    });
   };
+
+  const handleDayPress = (year: number, month: number, day: number, recipeId: number | undefined) => {
+    if (recipeId) {
+      navigation.navigate('MS_MealPlanWeek', { recipeId: recipeId, year: year, month: month, day: day });
+    } else {
+      navigation.navigate('MS_MealPlanWeek', { year: year, month: month, day: day });
+    }
+  }
 
   return (
     <>
@@ -55,7 +64,7 @@ export default function Calendar({ mealPlans, year, month }: CalendarMonthProps)
             <TouchableOpacity
               key={index}
               style={[styles.day, day !== null ? { backgroundColor: Colors.gray_100 } : { backgroundColor: 'transparent' }]}
-              onPress={() => navigation.navigate('MS_MealPlanWeek', { year: year, month: month, day: day })}
+              onPress={() => handleDayPress(year, month, day as number, recipeId)}
             >
               <Text style={day !== null ? styles.dayText : {}}>{day}</Text>
               {isPlanned ? 
@@ -73,7 +82,7 @@ export default function Calendar({ mealPlans, year, month }: CalendarMonthProps)
 };
 
 const screenWidth = Dimensions.get('window').width;
-const magicSpacing = 11; // it just works hahaha
+const magicSpacing = 10; // it just works hahaha
 
 const styles = StyleSheet.create({
   daysContainer: {

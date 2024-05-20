@@ -30,7 +30,7 @@ export default function EditableField({
 
   return (
     <>
-      <Text style={[styles.title, { marginBottom: isEditing ? Spacings.s : Spacings.m }]}>{title}</Text>
+      <Text style={[styles.title, { marginBottom: isEditing ? Spacings.xxs : Spacings.m }]}>{title}</Text>
       {isEditing ? (
         <InputField
           placeholder={title} 
@@ -66,14 +66,14 @@ export default function EditableField({
 }
 const styles = StyleSheet.create({
   title: {
-    fontSize: Sizes.h3,
+    fontSize: Sizes.l,
   },
   textContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   text: {
-    fontSize: Sizes.h2,
+    fontSize: Sizes.h3,
     marginRight: Spacings.s,
   },
 });
