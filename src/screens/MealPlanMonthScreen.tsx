@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, FlatList } from 'react-native';
+import { StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Spacings, Sizes } from '@values';

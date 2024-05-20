@@ -1,6 +1,6 @@
 import {
-  StyleSheet, KeyboardAvoidingView, ScrollView,
-  View, Text, TextInput, Dimensions
+  StyleSheet, ScrollView, View,
+  Text, TextInput, Dimensions
 } from "react-native";
 import React, { useState } from 'react';
 import Modal from 'react-native-modal';
