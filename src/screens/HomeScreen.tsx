@@ -127,8 +127,8 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
       const hasValidCalories = (filters.minCalories ? recipe.calories >= filters.minCalories : true) && 
                               (filters.maxCalories ? recipe.calories <= filters.maxCalories : true);
-      const hasValidTime = (filters.minTime ? recipe.time >= filters.minTime : true) && 
-                          (filters.maxTime ? recipe.time <= filters.maxTime : true);
+      const hasValidTime = (filters.minTime ? recipe.duration >= filters.minTime : true) && 
+                          (filters.maxTime ? recipe.duration <= filters.maxTime : true);
 
       return hasIngredient && hasCategory && hasValidCalories && hasValidTime;
     });

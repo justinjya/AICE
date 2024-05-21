@@ -50,39 +50,7 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
   }
   const isMoreIngredients = ingredientsToShow.length < ingredients.length;
   const isMoreCategories = categoriesToShow.length < categories.length;
-
-  const setMinCaloriesSafe = (value: string) => {
-  if (maxCalories && Number(value) > Number(maxCalories)) {
-    alert('Min calories cannot be greater than max calories');
-    return;
-  }
-  setMinCalories(value);
-};
-
-const setMaxCaloriesSafe = (value: string) => {
-  if (minCalories && Number(value) < Number(minCalories)) {
-    alert('Max calories cannot be less than min calories');
-    return;
-  }
-  setMaxCalories(value);
-};
-
-const setMinTimeSafe = (value: string) => {
-  if (maxTime && Number(value) > Number(maxTime)) {
-    alert('Min time cannot be greater than max time');
-    return;
-  }
-  setMinTime(value);
-};
-
-const setMaxTimeSafe = (value: string) => {
-  if (minTime && Number(value) < Number(minTime)) {
-    alert('Max time cannot be less than min time');
-    return;
-  }
-  setMaxTime(value);
-};
-
+  
   return (
     <Modal 
       isVisible={isVisible} 
@@ -105,7 +73,7 @@ const setMaxTimeSafe = (value: string) => {
           <View style={styles.rangeSection}>
             <TextInput
               value={minCalories}
-              onChangeText={setMinCaloriesSafe}
+              onChangeText={setMinCalories}
               placeholder='Minimum'
               style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
@@ -113,7 +81,7 @@ const setMaxTimeSafe = (value: string) => {
             <Text style={{ marginRight: Spacings.s }}>-</Text>
             <TextInput
               value={maxCalories}
-              onChangeText={setMaxCaloriesSafe}
+              onChangeText={setMaxCalories}
               placeholder='Maximum'
               style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
@@ -123,7 +91,7 @@ const setMaxTimeSafe = (value: string) => {
           <View style={styles.rangeSection}>
             <TextInput
               value={minTime}
-              onChangeText={setMinTimeSafe}
+              onChangeText={setMinTime}
               placeholder='Minimum'
               style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
@@ -131,7 +99,7 @@ const setMaxTimeSafe = (value: string) => {
             <Text style={{ marginRight: Spacings.s }}>-</Text>
             <TextInput
               value={maxTime}
-              onChangeText={setMaxTimeSafe}
+              onChangeText={setMaxTime}
               placeholder='Maximum'
               style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
