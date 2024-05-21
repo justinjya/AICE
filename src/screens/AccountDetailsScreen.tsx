@@ -1,6 +1,7 @@
 import { Text, StyleSheet, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useCallback, useState } from 'react';
 import { Colors, Sizes, Spacings } from "@values";
 import { Button, EditableField } from '@components';
 import { AuthContext, updateUser, signOut } from '@utils'
@@ -11,9 +12,11 @@ export default function AccountDetailsScreen() {
   const [isEditingName, setIsEditingName] = useState(false);
   const isEditingAnyField = isEditingName;
 
-  useEffect(() => {
-    setTempName(name as string);
-  }, [session, name]);
+  useFocusEffect(
+    useCallback(() => {
+      setTempName(name as string);
+    }, [session, name])
+  );
 
   const handleCancel = () => {
     setTempName(name as string);

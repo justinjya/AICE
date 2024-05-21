@@ -42,6 +42,10 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
   const resetFilters = () => {
     setSelectedIngredients({});
     setSelectedCategories({});
+    setMinCalories('');
+    setMaxCalories('');
+    setMinTime('');
+    setMaxTime('');
   };
 
   const handleShowMore = (array: Array<any>, itemsToShow: Array<any>, setItemsToShow: React.Dispatch<React.SetStateAction<any>>) => {
