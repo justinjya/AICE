@@ -14,6 +14,9 @@ AICE, an acronym for All I Can Eat, is a mobile application created to meet the 
 
 ## How to Run
 
+### Installing with APK
+You can install the APK file [here!](https://expo.dev/accounts/justinjya/projects/AICE/builds/a325493a-6162-4561-bad3-635be010d825)
+
 ### Using a Simulator
 Pre-Requisite: Simulator and npm is already installed
 1. Clone this repository
