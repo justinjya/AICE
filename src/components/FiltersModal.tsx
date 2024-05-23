@@ -141,6 +141,7 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
             )}
           </View>
           {isMoreCategories && <Button title="Show more" style={{ alignSelf: 'flex-end' }} textStyle={styles.showMore} onPress={() => handleShowMore(categories, categoriesToShow, setCategoriesToShow)} />}
+          <View style={{ marginBottom: Spacings.m }} />
         </ScrollView>
       </View>
     </Modal>
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 20,
     paddingHorizontal: Spacings.m,
     paddingTop: Spacings.s,
-    paddingBottom: Spacings.xxl
+    // paddingBottom: Spacings.xxl
   },
   pullBarThingy: {
     width: 86,

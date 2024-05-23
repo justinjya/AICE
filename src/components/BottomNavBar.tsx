@@ -1,13 +1,13 @@
 import { View, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@values';
+import { Colors, Sizes, Spacings } from '@values';
 import IconButton from './IconButton';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 type IconName = 'home' | 'heart-sharp' | 'calendar-clear' | 'person' | 'home-outline' | 'heart-outline' | 'calendar-clear-outline' | 'person-outline';
 
-export const IOS_BOTTOM_NAV_BAR_HEIGHT = 96;
-export const ANDROID_BOTTOM_NAV_BAR_HEIGHT = 76;
+export const IOS_BOTTOM_NAV_BAR_HEIGHT = 86;
+export const ANDROID_BOTTOM_NAV_BAR_HEIGHT = 56;
 
 export default function BottomNavBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
@@ -50,7 +50,7 @@ export default function BottomNavBar({ state, descriptors, navigation }: BottomT
             icon={
               <Ionicons 
                 name={iconName} 
-                size={30} 
+                size={24} 
                 color={Colors.onPrimary} 
               />
             }
@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     flexDirection: 'column',
-    paddingTop: 19,
+    paddingTop: Spacings.m_s,
   },
 });
