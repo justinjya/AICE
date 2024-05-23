@@ -79,17 +79,17 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
               value={minCalories}
               onChangeText={setMinCalories}
               placeholder='Minimum'
-              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              style={[styles.rangeInput, { fontSize: Sizes.m, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
-            <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
+            <Text style={{ marginRight: Spacings.s }}>kcal</Text>
             <Text style={{ marginRight: Spacings.s }}>-</Text>
             <TextInput
               value={maxCalories}
               onChangeText={setMaxCalories}
               placeholder='Maximum'
-              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              style={[styles.rangeInput, { fontSize: Sizes.m, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
-            <Text style={{ marginRight: Spacings.s }}>Kcal</Text>
+            <Text style={{ marginRight: Spacings.s }}>kcal</Text>
           </View>
           <Text style={styles.h2}>Time</Text>
           <View style={styles.rangeSection}>
@@ -97,7 +97,7 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
               value={minTime}
               onChangeText={setMinTime}
               placeholder='Minimum'
-              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              style={[styles.rangeInput, { fontSize: Sizes.m, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Mins</Text>
             <Text style={{ marginRight: Spacings.s }}>-</Text>
@@ -105,7 +105,7 @@ export default function FiltersModal({ isVisible, setIsVisible }: FiltersModalPr
               value={maxTime}
               onChangeText={setMaxTime}
               placeholder='Maximum'
-              style={[styles.rangeInput, { fontSize: Sizes.l, marginRight: Spacings.s }]}
+              style={[styles.rangeInput, { fontSize: Sizes.m, marginRight: Spacings.s }]}
               keyboardType='number-pad'/>
             <Text style={{ marginRight: Spacings.s }}>Mins</Text>
           </View>
