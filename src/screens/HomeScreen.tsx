@@ -37,11 +37,11 @@ function HeaderComponent({
 
   useEffect(() => {
     const isFilterFilled = 
-      filters.categories.length > 0 &&
-      filters.ingredients.length > 0 &&
-      filters.minCalories !== null &&
-      filters.maxCalories !== null &&
-      filters.minTime !== null &&
+      filters.categories.length > 0 ||
+      filters.ingredients.length > 0 ||
+      filters.minCalories !== null ||
+      filters.maxCalories !== null ||
+      filters.minTime !== null ||
       filters.maxTime !== null;
     setIsFilterActive(isFilterFilled);
   }, [filters, setIsFilterActive]);
