@@ -30,7 +30,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     }
   }
 
-  const isButtonDisabled = !name || !isEmailValid(email) || password.length < 5;
+  const isButtonDisabled = !name || !isEmailValid(email) || password.length < 6;
 
   return (
     <SafeAreaView style={styles.container}>
